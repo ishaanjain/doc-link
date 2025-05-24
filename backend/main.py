@@ -39,7 +39,7 @@ async def extract_requirements_with_anthropic(pdf_path: str) -> str:
             import base64
             pdf_base64 = base64.b64encode(pdf_data).decode('utf-8')
         
-        # Request requirements extraction
+        # Request requirements extraction with structured output
         response = anthropic_client.messages.create(
             model="claude-3-5-sonnet-20241022",
             max_tokens=4096,
@@ -48,7 +48,17 @@ async def extract_requirements_with_anthropic(pdf_path: str) -> str:
                 "content": [
                     {
                         "type": "text", 
-                        "text": "Extract all product verification requirements from this document and return them as a Python list of strings. Each requirement should be a separate string in the list. Focus on specific, testable requirements that can be verified."
+                        "text": """Extract all product verification requirements from this document and return them as a JSON array of objects. Each object should have exactly this structure:
+{
+  "requirement": "<LLM-generated clear, concise description of the requirement>",
+  "req_file_txt": "<exact text from the source document that corresponds to this requirement>"
+}
+
+Focus on specific, testable requirements that can be verified. For each requirement:
+1. Generate a clear, actionable description in the 'requirement' field
+2. Include the exact verbatim text from the document in the 'req_file_txt' field
+
+Return only the JSON array, no additional text or formatting."""
                     },
                     {
                         "type": "document", 
