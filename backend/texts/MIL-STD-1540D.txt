@@ -1,0 +1,3568 @@
+Downloaded from http://www.everyspec.com
+
+NOT
+MEASUREMENT
+SENSITIVE
+
+        MIL-STD-1540D
+
+             15 January 1999
+
+                                             __________________
+
+       SUPERSEDING
+              MIL-STD-1540C
+                       15 SEPTEMBER 1994
+
+DEPARTMENT OF DEFENSE
+STANDARD PRACTICE
+
+PRODUCT VERIFICATION
+REQUIREMENTS
+
+FOR
+
+LAUNCH, UPPER STAGE, AND SPACE
+VEHICLES
+
+AMSC  N/A
+
+FSC 1810
+
+                            
+Downloaded from http://www.everyspec.com
+
+FOREWORD
+
+1.
+
+2.
+
+3.
+
+4.
+
+This Military Standard is approved for use by all Departments and Agencies of
+the Department of Defense.
+
+Beneficial comments (recommendations, additions, or deletions) and any
+pertinent data which may be of use in improving this document should be
+provided by letter addressed to:
+
+Space and Missile Systems Center, SMC/AXM
+160 Skynet Street, Suite 2315
+El Segundo, CA  90245-4683
+
+A verification process is required by this document.  The verification process is
+fundamental in the development of a successful launch or space system.  The
+process involves various tasks performed in different program phases applying
+a coherent bottom-up building block concept.
+
+The fact that most launch and space systems involve flight equipment that is
+not recoverable and not repairable means that risk management is essential.
+The cost of a failure may be extremely high due to the loss of mission
+capability and the loss of equipment.  The large number of independent
+organizations involved and the complexity of equipment and software means
+that extensive verification of launch and space systems is necessary to reduce
+the risk of failure.  A combination of different verification methodologies (e.g.,
+Test, Analysis, Inspection) at several assembly levels (from units to the overall
+system) through the various program verification phases (e.g. Qualification,
+Acceptance, Pre-launch, On-orbit) is cost effective in assuring successful
+equipment and software design and operation.
+
+ii
+
+Downloaded from http://www.everyspec.com
+
+CONTENTS
+
+PARGRAPH
+
+FOREWORD ............................................................................................
+
+1.
+
+SCOPE .....................................................................................................
+
+1.1  
+
+Scope ................................................................................................
+
+page
+ii
+
+1
+
+1
+
+2.   APPLICABLE DOCUMENTS  ......................................................................
+2.1  
+2.2    
+2.2.1  
+2.3  
+2.4  
+
+1
+General  ............................................................................................         1
+Government Documents ...................................................................         1
+Specifications, standards and handbooks  ...............................         1
+Non Government Publications  .........................................................         2
+Order of precedence .........................................................................        2
+
+3.   DEFINITIONS .... .........................................................................................
+3.1  
+3.2  
+3.3  
+3.4  
+3.5  
+3.5.1  
+3.5.2  
+3.5.3  
+3.5.4  
+3.5.5  
+3.6  
+3.7  
+3.7.1  
+3.7.2  
+3.8  
+3.9   
+3.10  
+3.11  
+
+3
+Part.....................................................................................................        3
+Subassembly  ...................................................................................         3
+Unit ....................................................................................................        3
+Subsystem ........................................................................................         3
+Vehicle ..............................................................................................         3
+Launch Vehicle  ........................................................................         3
+Upper-stage Vehicle   ...............................................................         3
+Space Experiment    ..................................................................        3
+Space Vehicle ...........................................................................        3
+Flight Vehicle ............................................................................        4
+System .............................................................................................         4
+Combined Systems ..........................................................................         4
+Launch Systems ......................................................................          4
+On-orbit System ........................................................................         4
+Airborne Support Equipment (ASE) ..................................................         4
+Critical Unit .......................................................................................         4
+Development Test Article .................................................................         4
+Reusable Item ..................................................................................         5
+
+6
+4. GENERAL REQUIREMENTS ...................................................................  
+6
+Objectives of  Verification .................................................................
+4.1
+Verification Activities ........................................................................
+4.2
+6
+Risk Management  .............................................................................        7
+4.3  
+
+iii
+
+Downloaded from http://www.everyspec.com
+
+TABLE OF CONTENTS
+(continued)
+
+8
+5. DETAILED REQUIREMENTS  ..................................................................
+8
+Requirements  Allocation  .................................................................
+5.1
+8
+Service  Life Cycle Profile .................................................................
+5.2
+8
+Environmental Design Requirements  ...............................................
+5.3
+9
+Verification Methods .........................................................................
+5.4
+10
+Analysis  ....................................................................................
+5.4.1
+10
+Test ................. .........................................................................
+5.4.2
+Hardware Qualification .....................................................
+5.4.2.1  
+10
+                Qualification Techniques ...........................................      10
+5.4.2.1.1  
+        Qualification Test Requirements ...............................      10
+5.4.2.1.2  
+        Test for Risk Mitigation ..............................................      11
+5.4.2.1.3  
+11
+Hardware Acceptance  ......................................................
+5.4.2.2  
+         Acceptance Test Requirements ...............................      11
+5.4.2.2.1
+         Acceptance Methods ................................................      12
+5.4.2.2.2  
+         Test for Risk Mitigation  ............................................      12
+5.4.2.2.3  
+13
+5.4.3
+Inspection  .................................................................................
+13
+5.4.4
+Demonstration  ..........................................................................
+5.4.5
+13
+Similarity ...................................................................................
+Integrated Test Plan  .........................................................................      13
+5.5
+5.6  
+14
+Preparation for Verification Activities ................................................
+Preparation for Analysis ............................................................      14
+5.6.1  
+Preparation for Test Activities .................................................       14
+5.6.2  
+Preparation for Inspections  .....................................................       14
+5.6.3
+Preparation for Demonstrations ...............................................       15
+5.6.4
+Documentation for Demonstrations .........................................       15
+5.6.5
+Process Improvement ..............................................................       15
+5.6.6
+Conduct Verification Activities ..........................................................       15
+5.7
+15
+Evaluate Verification Results  ...........................................................
+5.8
+
+6.0    NOTES  .....................................................................................................     16
+Shared Database  .............................................................................     16
+6.1  
+Guidance Tables ...............................................................................      16
+6.2  
+
+TABLES
+
+ T-1  Factors to Consider When Establishing Test Requirements...        17
+      T-2 Type of Subsystem  ................................................................    18-21
+      T-3 Primary Qualification Tests to Identify Failure Mechanism .....         22
+ T-4 Primary Acceptance Test to Precipitate Failure Mechanism ...         23
+
+CONCLUDING MATERIAL   ...................................................................       24
+
+iv
+
+ 
+ 
+ 
+          
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+1.   SCOPE
+
+1.1  Scope. This document requires that a process be established to
+
+develop and manage verification requirements to assure that launch and space
+equipment can function correctly and withstand stresses it may encounter during its
+life cycle including end-of-life performance requirements. This document is
+intended for use in developing the detailed verification requirements for a particular
+project.  The application of these requirements should result in an effective
+verification process and consequently high confidence in achieving successful
+space missions.
+
+2.   APPLICABLE DOCUMENTS
+
+  2.1  General.  The documents listed in this section are specified in sections 3, 4,
+and 5 of this standard. This section does not include documents cited in other
+sections of this standard or recommended for additional information or as examples.
+While every effort has been made to ensure the completeness of this list, document
+users are cautioned that they must meet all specified requirements documents cited
+in sections 3, 4, and 5 of this standard, whether or not they are listed.
+
+       2.2  Government Documents.
+
+       2.2.1 Specifications, standards, and handbooks.  The following standards and
+specifications form a part of this document to the extent specified herein.  Unless
+otherwise specified, the issues of these documents are those listed in the issue of
+the Department of Defense Index of Specifications and Standards (DODISS) and
+supplement thereto, cited in the solicitation.
+
+DEPARTMENT OF DEFENSE STANDARDS
+
+MIL-STD-810
+
+Environmental Test Methods and
+Engineering Guidelines.
+
+MIL-STD-1522 (USAF)
+
+Standard General Requirements for Safe 
+Design and Operation of Pressurized Missile  
+
+       and Space Systems.
+
+MIL-STD-1541 (USAF)
+
+Electromagnetic Compatibility Requirements for
+
+                                                         Space Systems.
+
+1
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+MIL-STD-1833 (USAF)
+
+Test Requirements for Ground Equipment
+and  Associated Computer Software 
+Supporting Space Vehicles. (Canceled)
+
+MIL-HDBK-340A (USAF) Volume 1 Test Requirements For Launch, 
+Upper Stage & Space Vehicles - Baselines
+
+                                                         Upper Stage & Space Vehicles - 
+                                                         Application Guidelines.
+
+       Volume ll - Test Requirements for Launch, 
+
+MIL-HDBK-343 (USAF)
+
+Design, Construction and Testing 
+Requirements for One Of A Kind
+Equipment.
+
+(Unless otherwise indicated, copies of federal and military specifications, standards,
+and handbooks are available from the Defense Automated Printing Service (DAPS) 
+Document Order Desk, 700 Robbins Avenue, Building 4D, Philadelphia, PA
+19111-5094.
+
+Other Government documents, drawings, and publications.  The following other
+Government documents, drawings, and publications form a part of this document to
+the extent specified herein. Unless otherwise specified, the issues are those
+specified  are those in the solicitation.
+
+          2.3  Non-Government publications. The following other Government
+documents, drawings, and publications form a part of this document to the extent
+specified herein. Unless otherwise specified, the issues are those specified  are
+those in the solicitation.
+
+IES-RP-DTE012.1
+
+Handbook for Dynamic Data Acquisition 
+and Analysis.
+
+   2.4  Order of precedence.  In the event of conflict between the text of this
+
+document and the references cited herein, the text of this document takes
+precedence.  Nothing in this document, however, supersedes applicable laws and
+regulations unless a specific exemption has been obtained.
+
+2
+
+            
+    
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+ 3.  DEFINITIONS
+
+3.1  Part.  A part is a single piece, or two or more joined pieces, which are not
+
+normally subject to disassembly without destruction or impairment of the design use.
+Examples:  resistor, integrated circuit, relay, roller bearing.
+
+3.2  Subassembly.  A subassembly is a unit containing two or more parts which
+is capable of disassembly or part replacement.  Examples:  printed circuit board with
+parts installed, gear train.
+
+3.3  Unit.  A unit is a functional item that is viewed as a complete and separate
+
+entity for purposes of manufacturing, maintenance, or record keeping.  Examples:
+hydraulic actuator, valve, battery, electrical harness, transmitter.
+
+3.4  Subsystem.  A subsystem is an assembly of functionally related units.  It
+consists of two or more units and may include interconnection items such as cables
+or tubing, and the supporting structure to which they are mounted.  Examples:
+electrical power, attitude control, telemetry, thermal control, and propulsion
+subsystems.
+
+3.5  Vehicle.  Any vehicle defined in this section may be termed expendable or
+
+recoverable, as appropriate.
+
+3.5.1  Launch Vehicle.  A launch vehicle is one or more of the lower stages of a
+flight vehicle capable of launching upper-stage vehicles and space vehicles, usually
+into a suborbital trajectory.  A fairing to protect the space vehicle, and possibly the
+upper-stage vehicle, during the boost phase is typically considered to be part of the
+launch vehicle.
+
+3.5.2  Upper-stage Vehicle.  An upper-stage vehicle is one or more stages of a
+
+flight vehicle capable of injecting a space vehicle or vehicles into orbit from the
+suborbital trajectory that resulted from operation of a launch vehicle.
+
+3.5.3  Space Experiment.  A space experiment is usually part of the space
+vehicle payload and is therefore considered to be a lower level assembly of a space
+vehicle.  However, a space experiment may be an integral part of a space vehicle, a
+payload that performs its mission while attached to a space vehicle, or even a
+payload that is carried by a host vehicle but performs some of its mission as a
+free-flyer.  Whether complex space equipment is called a space experiment, a
+space instrument, or a space vehicle is discretionary and the nomenclature used
+should not affect the classification of the equipment or the requirements.
+
+3.5.4  Space Vehicle.  A space vehicle is an integrated set of subsystems and
+units capable of supporting an operational role in space.  A space vehicle may be
+an orbiting vehicle, a major portion of an orbiting vehicle, or a payload which
+performs its mission while attached to a launch or upper-stage vehicle.  The
+airborne support equipment (3.2.1), which is peculiar to programs utilizing a
+
+3
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+recoverable launch or upper-stage vehicle, is considered to be a part of the space
+vehicle.
+
+   3.5.5  Flight Vehicle.  A flight vehicle is the combination of elements of the
+launch system that is flown; i.e., the launch vehicle(s), the upper-stage vehicle(s),
+and the space vehicle(s) to be sent to orbit.
+
+   3.6  System.  A system is a composite of equipment, skills, and techniques
+
+capable of performing or supporting an operational role.  A system includes all
+operational equipment, related facilities, material, software, services, and personnel
+required for its operation.  A system is typically defined by the System Program
+Office or the procurement agency responsible for its acquisition.
+
+   3.7  Combined Systems.  Combined systems are interconnected systems that
+
+are required for program level operations or operational tests.  The combined
+systems of interest are typically the launch system and the on-orbit system.
+
+   3.7.1  Launch System.  A launch system is the composite of equipment, skills,
+and techniques capable of launching and boosting one or more space vehicles into
+orbit.  The launch system includes the flight vehicle and related facilities, ground
+equipment, material, software, procedures, services, and personnel required for
+their operation.
+
+   3.7.2  On-orbit System.  An on-orbit system is the composite of equipment,
+skills, and techniques permitting on-orbit operation of the space vehicle(s).  The
+on-orbit system includes the space vehicle(s), the command and control network,
+and related facilities, ground equipment, material, software, procedures, services,
+and personnel required for their operation.
+
+   3.8  Airborne Support Equipment (ASE).  Airborne support equipment is the
+
+equipment installed in a flight vehicle to provide support functions and interfaces for
+the space or upper-stage vehicle during launch and orbital operations of the flight
+vehicle.  This includes the hardware and software that provides the structural,
+electrical, electronic, and mechanical interfaces with the flight vehicle.
+
+   3.9  Critical Unit.  A critical unit is one whose failure can affect the system
+operation sufficiently to cause the loss of the stated vehicle objectives, a partial loss
+of the mission, or is a unit whose proper performance is essential from a range
+safety standpoint.
+
+   3.10  Development Test Article.  A development test article is a
+
+representative vehicle, subsystem, or unit dedicated to provide design and test
+information.  The information may be used to check the validity of analytic
+techniques and assumed design parameters, to uncover unexpected response
+characteristics, to evaluate design changes, to determine interface compatibility, to
+prove qualification and acceptance test procedures and techniques, or to determine
+if the equipment meets its performance specifications.  Development test articles
+
+4
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+include engineering test models, thermal models, and structural static and dynamic
+models.
+
+3.11  Reusable Item.  A reusable item is a unit, subsystem, or vehicle that is to
+
+be used for multiple missions.  The service life (3.5.6) of reusable hardware
+includes all planned reuses, refurbishment, and retesting.
+
+5
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+4.  GENERAL REQUIREMENTS
+
+4.1
+
+OBJECTIVES OF VERIFICATION
+
+This document outlines requirements for a verification process that shall be
+developed and used for launch vehicles, upper stage vehicles and space vehicles.
+During development of a launch vehicle, upper stage vehicle or space vehicle,
+verification is a fundamental process used to demonstrate that the system design
+meets applicable requirements and is capable of sustaining its operational role
+during the life cycle.  Verification may be by analysis, test, inspection,
+demonstration, similarity, or a combination of these methods  The verification
+objectives are primarily:
+
+a.
+
+b.
+
+c.
+
+d.
+
+e.
+
+To qualify the design through an analysis, demonstration and test
+program that verifies that it meets performance and interface
+requirements when exposed to applicable environments.
+
+To verify that the manufacturing process produces products that meet
+specified design requirements.
+
+To ensure that flight hardware and software are free of workmanship
+and latent defects and are acceptable for flight.
+
+To validate equipment and procedures necessary to support ground
+and flight operations.
+
+To predict and confirm vehicle and system integrity and performance
+during all phases and that it completes its design life cycle including
+end-of-life performance requirements.
+
+4.2
+
+VERIFICATION ACTIVITIES
+
+To reach the objectives stated in 4.1, verification activities shall be conceived
+
+and documented during the design and requirements definition phase.  The
+requirements to be verified shall be analyzed taking into account design
+peculiarities, candidate solutions, qualification status of heritage units and
+subsystems, test and analysis methodologies, programmatic constraints, risk
+management process, cost, schedule, and allowable performance dispersions.
+
+The verification activities are incrementally performed at different hardware
+and software assembly levels from units to the overall system, utilizing a suitable
+combination of  verification methods.  They apply to all project phases through the
+following main steps of the verification process:
+
+6
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+a.
+
+b.
+
+c.
+
+d.
+
+e.
+
+f.
+
+g.
+
+Establish all system requirements and allocate to subtier levels.
+
+Establish the service life cycle profile.
+
+Derive the environmental design requirements.
+
+Establish methods for design and process verification (Qualification)
+and product verification (Acceptance).
+
+Prepare for verification activities:  e.g.; prepare models, software and
+databases needed for analyses, prepare plans and procedures for
+tests, and develop tools and methodologies for inspections.
+
+Conduct the verification activities.
+
+Evaluate results to confirm verification.
+
+Details of other verification activities required such as for software and for
+
+integrated system level requirements are too extensive for inclusion in this
+document.  These omissions should not be interpreted to mean that these
+verification activities are less effective or less important.
+
+4.3  Risk Management  The risk management process is a life cycle process,
+which periodically reassesses the risk elements;  to ensure the programs
+ability to meet it’s cost, performance and schedule goals. The following
+guidelines shall apply:
+
+a.   Design margins shall be a Risk Management Decision,
+
+b.  Ensure that risk management decisions do not invalidate the verification
+objectives,
+
+c.  Because space systems / subsystems and launch vehicles are not
+managed to the same levels of risk. Space risk classification for either
+hardware class or program class or both should be agreed by the customer,
+
+d.  The risk classification of space programs, space vehicles and space
+experience are defined in MIL-HDBK-343.
+
+7
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+5.  DETAILED REQUIREMENTS
+
+5.1
+
+REQUIREMENTS ALLOCATION
+
+The system requirements including performance requirements and external
+
+interfaces, shall be documented.  The allocation of these system requirements to
+subtier hardware and software shall also be documented as subtier requirements.
+These system and subtier requirements establish the list of requirements that
+govern the design process and establish the need for subsequent verification of the
+hardware and software.
+
+5.2
+
+SERVICE LIFE CYCLE PROFILE
+
+A projection of life cycle events, performance requirements, interfaces,
+
+configuration, and associated environmental conditions for an item (unit through
+vehicle level of assembly) from its completion in manufacturing, through assembly
+and integration into a flight system, prelaunch, launch and orbital operation shall be
+documented.  The life cycle shall include the various phases an item may encounter
+in its life, such as:  testing, handling, shipping, storage, launch, ascent and on-orbit
+operations.  The combination of environments each item of equipment may
+encounter at each phase of its life cycle through end-of-life shall be determined.
+The following factors should be taken into account:
+
+a.
+
+b.
+
+c.
+
+d.
+
+e.
+
+Exposure and duration, to launch vehicle, operational and natural
+environments.
+
+Probability of environmental condition.
+
+Configuration of the hardware and applicable software.
+
+Interfaces with other equipment or software.
+
+Other information which helps identify any condition which may
+influence performance.
+
+5.3
+
+ENVIRONMENTAL DESIGN REQUIREMENTS
+
+Based on the service life cycle profile, the environmental design
+
+requirements shall be established for units, subsystems, vehicles and systems.  The
+design requirements shall include sufficient design margin to assure that the
+capability of production (flight) articles, including manufacturing variables, exceeds
+
+8
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+the worst case service life environments.  Consideration should be given to the
+following:
+
+a.
+
+b.
+
+c.
+
+d.
+
+e.
+
+f.
+
+Probability of environmental occurrence.
+
+Effect of combined environments (e.g., temperature, vibration,
+acceleration).
+
+Mitigation of failure modes and effects including propagation and
+criticality.
+
+Effect of equipment performance and criticality to mission success.
+
+Experience gained from identical equipment similarly used.
+
+Effects of planned acceptance and qualification testing.
+
+5.4
+
+VERIFICATION METHODS
+
+The verification process provides management tools to coordinate the many
+
+individuals and activities involved in assuring a successful mission.  Generally
+separate verification activities are implemented for the hardware, the software, and
+for the integrated system tests.  The verification methods shall include the following
+either singly or in combination:
+
+a.
+
+b.
+
+c.
+
+d.
+
+e.
+
+Analysis
+
+Test
+
+Inspection
+
+Demonstration
+
+Similarity
+
+Most requirements are verified using a combination of methods such as
+analysis and test or analysis and inspection.  The applicable level of assembly may
+be the unit level, the subsystem level, the vehicle level, or the integrated system
+level for prelaunch or on-orbit configurations.  The verification activities may be
+summarized by the preparation of detailed analysis plans, hardware qualification
+plans and procedures, software verification plans and procedures, hardware
+acceptance test plans and procedures, and integrated test plans and procedures.
+
+9
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+5.4.1 Analysis.  Design analysis shall be performed, documented and
+
+correlated with test plans and results.  Analysis shall include verification of unit,
+subsystem and system performance over expected life and operating environments.
+
+5.4.2 Test.  Testing is generally the method to verify that hardware items
+meet allocated system requirements during and following exposure to applicable
+environments. Testing includes an explicit measure of performance during exposure
+to an applicable environment, or it may be a measurement coupled with an analysis
+or other demonstration.
+
+5.4.2.1  Hardware Qualification.  Qualification tests, inspections and
+procedures shall be developed for hardware ranging from units through integrated
+systems.  In general, the design and manufacturing requirements should be verified
+at the lowest level of assembly practicable. Requirements affected by integration
+into higher levels of assembly, such as external system interfaces, should be
+verified at the highest practical level of assembly.  The establishment of effective
+and optimum test programs is a complex task which can best be accomplished by
+relying on prior experience.  Appendix A provides guidance that may be helpful for
+defining hardware qualification test requirements for a particular program.
+
+5.4.2.1.1  Qualification Techniques.  In general, verification of design and the
+
+associated manufacturing processes shall rely on performance of tests except in
+cases where:
+
+a.   Proven documented analysis methods are available for simple
+
+designs which have large design margins,
+
+b.   A design requirement can readily be verified by inspection or
+
+demonstration,
+
+c.   Qualifications by similarity shall be shown by analysis and the
+criteria provided in MIL-HDBK-340A, VOL ll, paragraph 4.4.
+
+5.4.2.1.2  Qualification Test Requirements.  Qualification test requirements for
+design and manufacturing verification shall be developed for units, subsystems and
+vehicles to assure that products have established and proven design margins of
+safety. Qualification testing is always required, although, in certain instances,
+qualification may be established by showing that a product is identical or similar to
+an existing product that has been qualified using analysis and Qualification by
+Similarity criteria as discussed in MIL-HDBK-340A, VOL ll, paragraph 4.4. The
+qualification test program shall assure that a design performance and safety margin
+exists for any mechanical, electrical or environmental stimuli that the product may
+reasonable expect to encounter during its service life including:
+
+a.   Assembly, integration and acceptance test at the factory,
+
+10
+
+ 
+ 
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+b. Transportation, pre-mission processing and checkout at the launch
+site,
+
+c.  The mission, including unique characteristics of the launch vehicle, space
+
+vehicle, space environment, and age related influences,
+
+d.  Other factors as shown in Table A-1.
+
+5.4.2.1.3   Test for Risk Mitigation.  In addition to analysis, tests shall be
+
+conducted to identify design deficiencies at the unit, subsystem or system level of
+assembly whenever the program identifies the need to mitigate any of the following
+product design and development risks:
+
+a.  Mitigate technical risk - the program is planning to use new hardware
+designs or new manufacturing processes that will produce a product that
+has unproven design margins and unverified performance characterics;
+
+b.  Mitigate cost and schedule risk - the program determines that they will
+not be able to recover, to the procuring agency’s satisfaction, from
+identifying a design or process deficiency late in the product development
+process, i.e., the cost and schedule required to identify and implement
+corrective actions during the qualification program would adversely
+impact the program schedule or the overall cost to develop the product.
+
+See Tables A1, A2 and A3 for factors relating tests to various
+development and manufacturing process risk.
+
+5.4.2.2  Hardware Acceptance.  Acceptance tests, inspections and
+
+procedures shall be developed for hardware ranging from units through integrated
+systems. The verification objective is to demonstrate that flight items are free of
+defects and integration errors and are ready for operational use.  This phase also
+includes recertification in case the flight configuration is disassembled due to failure
+or repair actions.  Appendix A provides guidance that is intended to help in
+developing hardware acceptance test requirements for a particular program.
+
+5.4.2.2.1    Acceptance Test  Requirements   Acceptance test requirements
+
+for product verification shall be developed for units, subsystems and vehicles to
+
+11
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+assure that the delivered product does not have latent material deficiencies and
+workmanship defects when it is determined that:
+
+a.  The product design characteristics are such that there may be
+hidden or dormant defects that might otherwise surface during testing
+at higher levels of assembly or during mission operations,
+
+b.  Testing is the most appropriate method of surfacing those defects.
+
+5.4.2.2.2   Acceptance Methods.  One or a combination of methods shall
+
+be selected to assure that accumulated defects of manufacturing and any
+previous operation or testing have not degraded the capability of the product to
+perform as designed during the mission life cycle.  The selected method(s) shall
+be capable of surfacing all infant mortality and workmanship induced failures at
+each level of assembly.  In general verification by testing is most efficient when:
+
+a. The design characteristics are sufficiently complex such that
+non-destructive inspection techniques (visual, x-ray, dye-penetrant,
+etc.) are not appropriate or cost effective, and other less costly
+methods are not appropriate or technically sufficient;
+
+b. The product size and configuration is such that environmental
+test stresses can be effectively induced throughout the product,
+without concern for overstressing the product.
+
+Programs must be able to prove that there is sufficient remaining
+
+useful life after verification testing such that the product can accomplish the
+mission.  The least risk is incurred when this is done by qualification testing of a
+dedicated test article or when there is a strong and proven product heritage.  The
+benefit that comes with product test verification outweighs the issue associated with
+proving that there is remaining useful life in a product.
+
+5.4.2.2.3  Test for Risk Mitigation.  Programs shall conduct tests to confirm
+
+specification performance and that defects were not introduced by assembling and
+integrating products in the field, or degraded by unanticipated interaction between
+those integrated elements, whenever the program identifies the need to mitigate any
+of the following risks:
+
+a.  Mitigate technical risk - the program cannot effectively acquire
+data at the next higher level of assembly.  The program will not be
+able to prove, by testing at the next higher assembly level, that the
+integrated assembly is functioning as designed; or the program
+determines that a failure at the next higher level of assembly may
+cause damage to other product elements or cause injury to
+personnel;
+
+12
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+b.  Mitigate schedule risk - the program will not test the next
+assembly level in a timely manner.  Identification of an assembly
+error or unfavorable interaction between elements at that later time
+would adversely impact program schedule;
+
+c.  Mitigate cost risk - detection of a failure at the next higher level
+of assembly would require extensive rework and retest to recover
+from such a failure.
+
+See Tables A1, A2 and A4 for factors relating tests for various development
+
+and manufacturing process risks.
+
+5.4.3 Inspection.  The inspection method of verification is usually performed
+during manufacturing, qualification, acceptance, integration and prelaunch phases.
+It is used mainly to verify those requirements where physical characteristics (e.g.
+construction features, finish, identification marking and cleanliness) and interfaces
+are involved.
+
+5.4.4 Demonstration.  A demonstration typically involves the use of actual
+hardware or software with a simulator or in a simulated operational configuration.
+For example, validating the ignitor circuitry or the circuitry to a destruct charge on a
+flight vehicle can best be accomplished by demonstrating that a simulated charge
+can be fired, rather than an actual charge.
+
+5.4.5 Similarity.  Verification by similarity is used usually in combination with
+
+analysis to show that an article is similar to another article that has already been
+qualified to equivalent or more stringent criteria. This verification method consists of
+assessment and review of hardware configuration, hardware application and prior
+test data including a comparison of prior test levels with new specific requirements.
+Differences in configuration, application or test conditions usually require analyses
+and additional testing to complete verification by the method of similarity.
+
+5.5  Integrated Test Plan.  Each program must evaluate and determine the need for
+and the best test approach for each product level of assembly that the program
+identifies as being a candidate for verification by test.  There are many factors to
+consider when establishing qualification and acceptance test requirements for a
+particular program.  Table A-1 provides a listing of some of the more pertinent
+factors that should be considered. Table A-2 provides a summary of the causes and
+types of failures surfaced during testing of products in previous launch, upper stage
+and space vehicle programs.
+
+13
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+Test requirements shall be established for design, performance and
+manufacturing verification (qualification) and for product verification (acceptance).
+A combination of test methods at levels of product assembly ranging from units
+through the assembled vehicle shall be selected to prove design margins, validate
+manufacturing processes and verify that products are free of latent defects.  The
+selected methods shall be capable of identifying all marginal aspects of the design
+and of the manufacturing process.  The test plan for a program should be designed
+to:
+
+a.
+
+Identify and correct problems at the lowest level of assembly.
+
+Prevent any problems from causing a failure in flight hardware at
+
+b.
+higher levels of assembly and with the highest assurance of no failure after
+launch.
+
+5.6  Preparation for Verification Activities.
+
+5.6.1 Preparation for Analysis.  For those requirements where analysis is
+
+identified as the primary or supplementary method for verification, additional tools,
+models, software, or databases may be required.  These items need to be
+developed, verified, and made available to meet the needs of the analysis.  In some
+cases the analysis results provide an input to another verification method, such as a
+test.  In those cases, the analysis needs to be scheduled such that the results are
+available when needed.
+
+5.6.2 Preparation for Test Activities.  The test activities and procedures
+
+shall be documented in sufficient detail to provide a framework for identifying and
+interrelating all of the individual tests and test procedures needed to complete the
+verification process.  These activities and procedures shall as a minimum include
+the qualification (design verification) and acceptance (product verification) test
+requirements.  A general description of each test planned, the conditions of the
+tests, and the pass-fail criteria shall be documented.  The tests should be based
+upon a function-by-function mission analysis and any specified testing
+requirements.  Test objectives shall be planned to verify compliance with the design
+and specified performance requirement of the items involved, including interfaces.
+The overall schedule of tests shall be prepared showing compatibility with program
+schedules including the availability of test articles, test facilities, special test
+equipment, and procedures.
+
+5.6.3 Preparation for Inspections.  Tools and methods shall be developed to
+conduct all required inspections.  A general description of each planned inspection,
+and the pass-fail criteria shall be documented.
+
+14
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+5.6.4 Preparation for Demonstrations.  A general description of each
+planned demonstration and the pass-fail criteria shall be documented.  The
+simulators, tools, and software needed for any demonstrations shall be developed
+and made available to meet the needs of the planned demonstrations.
+
+5.6.5 Documentation for Verification by Similarity.  Documentation that
+establishes the basis for verification by similarity shall be identified and reviewed for
+adequacy.
+
+5.6.6 Process Improvement.  In the course of a program, information may be
+
+acquired which can help to improve the efficiency and cost effectiveness of the
+process.  The procedures shall indicate data retention and traceability provisions for
+use in periodically reexamining and revising the process.  Since the number of
+articles for a given program is often small, the results from other similar programs
+may be considered before major changes are made, for example, adding or deleting
+a test.  As a minimum, plans for verification process improvement shall include
+criteria that will trigger reexamination of the process.
+
+5.7
+
+Conduct Verification Activities  The various verification activities shall
+be conducted with an accuracy necessary to assure their validity and that the pass-
+fail criteria have been met.
+
+5.8
+
+Evaluate Verification Results
+
+An audit of all verification results with special attention given to omissions or
+
+changes in requirements shall be conducted prior to the launch readiness review.
+
+15
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+6.  NOTES
+
+6.1
+
+Shared Database
+
+A key to improvement in the design, integration, and test process is the
+
+ability to provide product life cycle information to the various technical and
+management disciplines.  Availability of product life cycle data will greatly enhance
+program performance goals in terms of product improvement, cost savings, and
+schedule optimization.
+
+Product improvements, test process improvements, and associated cost
+benefits can only be fully realized if the necessary data are documented in an easily
+retrievable electronic format.  This can best be accomplished by industry support of
+a common set of data with standardized formats.
+
+The development and use of an industry-wide product life cycle database will
+
+reduce the costs of sharing data and provide a means for quantitative test process
+improvement.  A minimum set of data using a common database format is required
+to accommodate these goals.
+
+The Space Systems Engineering Database at the Aerospace Corporation is
+an enterprise wide relational information system suitable for management of project
+data. The SSED data model uses ISO 10303 Standard for Exchange of Product
+Model Data that provides complete, unambiguous, computer interpretable data for
+each constituent of a product throughout its life cycle (from conceptual to orbital
+operation).
+
+6.2  Guidance Tables.  Programs may use the programmatic factors listed in
+
+Table 1 when establishing testing requirements. Consideration of a test  program
+also incorporates knowledge of the possible failure cause or type. Table 2 contains
+a comprehensive list of failure cause or type for the various units and subsystems
+comprising space hardware. Once failure mechanism is determined, the
+environmental qualification test listed in Table 3 provide means of detecting the
+defect. The primary acceptance test to precipitate failure mechanisms are given in
+Table 4.
+
+16
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+TABLE 1
+
+FACTORS TO CONSIDER WHEN ESTABLISHING TEST REQUIREMENTS
+
+_  Criticality to mission
+_  Sensitivity to environment
+_  Severity of environment
+_  Knowledge or uncertainty of environment
+_  Environmental time profile
+_  Similarity to previously qualified articles
+_  Ability to analyze vs. design margins
+_  Maturity of technology
+_  Maturity of production line
+_  Level of assembly vs. simulation, e.g. tubing and
+wiring vibration tested at higher levels of assembly
+_  Product complexity
+_  Cost of repair and retest for problems found at higher
+levels of assembly
+_  Use of qualification articles for flight-alternative
+strategies
+_  Benefits of dedicated qualification articles
+
+-Fatigue life verification for repeated acceptance
+
+test of flight articles
+
+-Available test article to evaluate
+
+upgrades/modifications
+
+-Available testbed to evaluate mission anomalies
+-Greater ability to prove design robustness
+
+_  Simulation of mission environments
+_  Prior experience with statistically significant sample of
+similar products and their performance variability
+_  Training and experience of manufacturing, assembly
+integration and test personnel
+_  Use of automated vs. operator performed
+manufacturing operations
+_  Manufacturing process controls proven to produce
+defect free products of similar designs and complexity
+
+17
+
+ 
+ 
+ 
+ 
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+Type of Subsystem
+
+The
+rma
+l
+
+Co
+ntro
+l
+
+Opt
+ical
+
+Str
+uct
+ural
+
+Tub
+ing
+
+Co
+Wiri
+nne
+ng
+ctor
+and
+s
+
+Ord
+nan
+ce
+
+Flui
+d
+
+X
+X
+X
+X
+X
+X
+
+X
+
+X
+
+X
+
+X
+X
+
+X
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+X
+X
+X
+
+X
+
+X
+
+X
+
+X
+X
+
+X
+X
+
+Ele
+ctri
+caland
+
+Ele
+ctro
+nic
+
+Ant
+enn
+a
+
+Sol
+ar
+
+Arr
+ay
+
+MM
+A
+
+Batt
+ery
+
+Pro
+pul
+sio
+n
+
+Ves
+sel
+or
+
+Pre
+ssu
+re
+
+Co
+mp
+one
+nt
+
+X
+X
+X
+
+X
+
+X
+X
+X
+X
+X
+
+X
+
+X
+
+X
+X
+X
+
+X
+X
+X
+X
+X
+
+X
+
+X
+X
+X
+X
+
+X
+X
+
+X
+
+X
+
+X
+
+X
+X
+X
+X
+X
+X
+X
+X
+X
+X
+X
+X
+X
+X
+
+X
+X
+X
+X
+X
+
+X
+X
+X
+X
+
+Failure Cause or Type
+
+•  Manufacturing Workmanship
+    -  Solder Balls/Splash
+    -  Solder Bridges
+    -  Excessive/Insufficient Solder
+    -  Poorly Wetted Solder
+    -  No Solder
+    -  Excessive Heat/Soldering
+    -  Undertorqued Screws
+    -  Contamination
+    -  Loose Parts
+    -  Loose Connectors
+    -  Excessive Staking
+    -  Abnormal Epoxy
+    -  Inadequate Bond
+    -  Cold Flow
+
+•  Defective Parts
+    -  Pins Wrong Length
+    -  Bent Pins
+    -  Broken Part
+    -  Broken Wires
+    -  Wrong Part
+
+•  Defective Boards
+    -  Burrs
+    -  Fractured Traces
+    -  Poor Plating
+    -  Cracked Bonding
+
+18
+
+Failure Cause or Type
+
+•  Defective Wiring or Connectors
+    -  Inadequate Service Loop
+    -  Cracked or Abraded Insulation
+    -  Pinched Wires
+    -  Wrong Connector
+    -  Poor Routing
+    -  Wrong Wire Size
+    -  Miswiring
+    -  Poor Ground
+
+•  Defective Seals
+    -  Gaskets & O-Rings
+    -  Soldering/Welding
+    -  Misaligned Seals
+
+•  Handling
+    -  Excessive
+    -  Mishaps
+    -  Incorrect Equipment
+    -  Operator Error
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+Ele
+ctri
+caland
+
+Ele
+ctro
+nic
+
+Ant
+enn
+a
+
+MM
+A
+
+Sol
+ar
+Arr
+ay
+
+Pro
+pul
+sio
+n
+
+Batt
+ery
+
+Ves
+sel
+or
+
+Pre
+ssu
+re
+
+Co
+mp
+one
+nt
+
+Type of Subsystem
+
+The
+rma
+l
+
+Co
+ntro
+l
+
+Opt
+ical
+
+Str
+uct
+ural
+
+Tub
+ing
+
+Co
+Wiri
+nne
+ng
+ctor
+and
+s
+
+Ord
+nan
+ce
+
+Flui
+d
+
+X
+X
+X
+X
+X
+X
+X
+X
+
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+
+X
+X
+X
+X
+
+X
+
+X
+X
+X
+X
+
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+
+X
+X
+
+X
+X
+X
+X
+
+X
+
+X
+
+X
+X
+X
+
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+X
+X
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+
+X
+X
+X
+X
+
+X
+X
+X
+X
+
+19
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+i
+
+g
+n
+b
+u
+T
+
+X
+
+X
+
+X
+
+X
+
+X
+
+d
+n
+a
+
+g
+n
+i
+r
+i
+
+W
+
+s
+r
+o
+t
+c
+e
+n
+n
+o
+C
+
+e
+c
+n
+a
+n
+d
+r
+O
+
+i
+
+d
+u
+F
+
+l
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+Failure Cause or Type
+
+l
+
+a
+c
+i
+r
+t
+c
+e
+E
+
+l
+
+d
+n
+a
+
+i
+
+c
+n
+o
+r
+t
+c
+e
+E
+
+l
+
+a
+n
+n
+e
+t
+n
+A
+
+A
+M
+M
+
+l
+
+r
+a
+o
+S
+
+y
+a
+r
+r
+
+A
+
+y
+r
+e
+t
+t
+a
+B
+
+Type of Subsystem
+
+t
+n
+e
+n
+o
+p
+m
+o
+C
+
+e
+r
+u
+s
+s
+e
+r
+P
+
+r
+o
+
+l
+
+e
+s
+s
+e
+V
+
+l
+
+a
+m
+r
+e
+h
+T
+
+l
+
+o
+r
+t
+n
+o
+C
+
+l
+
+a
+c
+i
+t
+p
+O
+
+l
+
+a
+r
+u
+t
+c
+u
+r
+t
+
+S
+
+l
+
+i
+
+n
+o
+s
+u
+p
+o
+r
+P
+
+•  Inadequate Design 
+
+    -  Precision Surfaces/Alignment 
+
+    -  Insufficient Structural Margin 
+
+    -  Poor Thermal Design 
+
+    -  Wrong Material
+
+    -  Insufficient Fatigue Life 
+
+    -  Tiedown of Tubing/Wiring
+
+    -  Inadequate Environmental Criteria
+
+    -  Insufficient Life 
+
+    -  Wrong Lubricants 
+
+    -  Incompatible Materials 
+
+    -  Insufficient Insulation/Isolation
+
+    -  Insufficient Spacing/Clearance 
+
+    -  Tolerance Buildup 
+
+    -  Cold Welding
+
+•  Electromagnetic Interference
+
+    -  Inadequate Grounding 
+
+    -  Insufficient Shielding
+
+    -  Defective RF Seals 
+
+    -  High Resistance 
+
+    -  No RF Ground
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+20
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Failure Cause or Type
+
+•  Testing and Test Procedures 
+
+    -  Failure To Follow Procedures 
+
+    -  Wrong or No Procedure 
+
+    -  Incomplete Procedure
+
+    -  Defective Test Equipment 
+
+    -  Test Equipment Failure/Anomaly
+
+    -  Wrong Fixtures
+
+    -  Over/Under Torqued Bolts 
+
+    -  Inadequate Instrumentation 
+
+    -  Operator Error
+
+    -  Excessive Testing 
+
+•  Repair, Rework and Retest
+
+    -  Ad Hoc Procedures
+
+    -  Excessive Rework
+
+    -  Excessive Retest 
+
+    -  Excessive Heat/Soldering /Welding
+
+    -  Collateral Damage 
+
+•  Inexperienced Personnel 
+
+    -  Manufacturing
+
+    -  Handling 
+
+    -  Assembly 
+
+    -  Integration
+
+    -  Testing 
+
+l
+
+a
+c
+i
+r
+t
+c
+e
+E
+
+l
+
+d
+n
+a
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+i
+
+c
+n
+o
+r
+t
+c
+e
+E
+
+l
+
+a
+n
+n
+e
+t
+n
+A
+
+A
+M
+M
+
+l
+
+r
+a
+o
+S
+
+y
+a
+r
+r
+
+A
+
+y
+r
+e
+t
+t
+a
+B
+
+l
+
+i
+
+n
+o
+s
+u
+p
+o
+r
+P
+
+Type of Subsystem
+
+t
+n
+e
+n
+o
+p
+m
+o
+C
+
+e
+r
+u
+s
+s
+e
+r
+P
+
+r
+o
+
+l
+
+e
+s
+s
+e
+V
+
+l
+
+a
+m
+r
+e
+h
+T
+
+l
+
+o
+r
+t
+n
+o
+C
+
+l
+
+a
+c
+i
+t
+p
+O
+
+l
+
+a
+r
+u
+t
+c
+u
+r
+t
+
+S
+
+i
+
+g
+n
+b
+u
+T
+
+d
+n
+a
+
+g
+n
+i
+r
+i
+
+W
+
+s
+r
+o
+t
+c
+e
+n
+n
+o
+C
+
+e
+c
+n
+a
+n
+d
+r
+O
+
+i
+
+d
+u
+F
+
+l
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+21
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Potential Failure Mechanism
+
+*  Mounting broken/loose
+
+*  Broken Part
+
+*  Shorted Part
+
+*  Defective Part
+
+*  Defective Board
+
+*  Broken/Shorted/Pinched Wires
+
+*  Defective/Broken Solder
+
+*  Contamination
+
+*  Leaky Gaskets/Seals/RF
+
+*  Incorrect Wiring/Routing Design
+
+*  Relay/Switch Chatter
+
+*  Adjacent Curciut Board Contact
+
+*  Premature Wearout
+
+*  Electromagnetic Interference
+
+*  Insufficient Design Margin
+
+*  Corona Discharge/Arcing
+
+*  Inadequate Tiedown of Tubing/Wiring
+
+*  Inadequate Thermal Design
+
+*  Brittle Material Failure
+
+*  Inadequate Fatigue Life
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+Primary Qualification Tests to Identify Failure 
+
+Mechanism
+
+l
+
+a
+n
+o
+
+i
+t
+c
+n
+u
+F
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+m
+u
+u
+c
+a
+V
+
+l
+
+a
+m
+r
+e
+h
+T
+
+l
+
+e
+c
+y
+C
+
+l
+
+a
+m
+r
+e
+h
+T
+
+n
+o
+
+i
+t
+
+l
+
+a
+r
+e
+e
+c
+c
+A
+
+X
+
+t
+s
+r
+u
+B
+d
+n
+a
+
+f
+
+o
+o
+r
+P
+
+e
+r
+u
+s
+s
+e
+r
+P
+
+e
+g
+a
+k
+a
+e
+L
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+r
+o
+n
+o
+
+i
+t
+
+a
+r
+b
+V
+
+i
+
+c
+i
+t
+s
+u
+o
+c
+A
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+k
+c
+o
+h
+S
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+E
+M
+E
+
+e
+
+f
+i
+
+L
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+22
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Potential Failure Mechanism
+
+*  Parameter Drift
+
+*  Electrical Intermittants
+
+    -  Solder Joints
+
+    -  Loose Wires
+
+    -  Connectors
+
+*  Latent Defective Parts
+
+*  Parts Shorting
+
+*  Chafed/Pinched Wires
+
+*  Adjacent Circuit Board Contact
+
+*  Parameters Changing Due to
+
+    Deflections 
+
+*  Loose Hardware
+
+*  Moving Parts Binding
+
+*  Leaky Gaskets/Seals
+
+*  Lubricants Changing
+
+    Characteristics
+
+*  Material Embrittlement
+
+*  Outgassing/Contamination
+
+*  Degradation of Electrical or
+
+    Thermal Insulation 
+
+*  Corona Discharge/Arcing
+
+*  Defective Pressure Vessels
+
+*  Structural Defects 
+
+*  Defective Wiring
+
+*  Defective Tubing
+
+n
+i
+-
+r
+a
+e
+W
+
+n
+o
+i
+t
+a
+r
+b
+V
+
+i
+
+c
+i
+t
+s
+u
+o
+c
+A
+
+r
+o
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+l
+
+a
+n
+o
+i
+t
+c
+n
+u
+F
+
+X
+
+X
+
+X
+
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+Primary Acceptance Tests To Precipitate Failure 
+
+Mechanism
+
+l
+
+a
+m
+r
+e
+h
+T
+
+l
+
+e
+c
+y
+C
+
+l
+
+a
+m
+r
+e
+h
+T
+
+m
+u
+u
+c
+a
+V
+
+e
+g
+a
+k
+a
+e
+L
+
+f
+o
+o
+r
+P
+
+e
+r
+u
+s
+s
+e
+r
+P
+
+d
+a
+o
+L
+
+f
+o
+o
+r
+P
+
+E
+M
+E
+
+k
+c
+o
+h
+S
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+23
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Downloaded from http://www.everyspec.com
+
+MIL-STD-1540D
+
+CONCLUDING MATERIAL
+
+Preparing Activity:
+Air Force - 19
+(Project  1810-9806)
+
+Custodian:
+   Air Force - 19
+
+Review activities:
+   Air Force - 33
+   NASA - NA
+
+24
+
+
