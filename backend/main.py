@@ -166,17 +166,33 @@ async def match_requirements(file: UploadFile = File(...), requirements_json: st
                         },
                         {
                             "type": "text",
-                            "text": f"""Please analyze this formal specification PDF and match each requirement from this JSON list to exact text from the PDF. Return a JSON array where each element corresponds to the same index in the input JSON. If no matching text is found, use an empty string.
+                            "text": f"""Please analyze this formal specification PDF and match each requirement from this JSON list to exact text from the PDF. Return a JSON array where each element is an object with this structure:
+{{
+  "requirement": "<original requirement text>",
+  "matched_text": "<exact matching text from PDF or empty string if no match>",
+  "confidence": "<high|medium|low based on match quality>"
+}}
 
 JSON requirements:
 {requirements_json}
 
-For each requirement, find the exact text from the PDF that matches it. Return only a JSON array of strings - either the matching text or empty string for each requirement."""
+Return only the JSON array, no additional text or formatting."""
                         }
                     ]
                 }
             ],
         )
+        
+        # Parse the JSON response from Claude
+        try:
+            import json
+            matched_requirements = json.loads(response.content[0].text)
+            # Ensure it's a list
+            if not isinstance(matched_requirements, list):
+                matched_requirements = []
+        except (json.JSONDecodeError, TypeError):
+            # Fallback to empty array if parsing fails
+            matched_requirements = []
         
         # Clean up the file after processing
         try:
@@ -184,7 +200,7 @@ For each requirement, find the exact text from the PDF that matches it. Return o
         except:
             pass  # Ignore cleanup errors
         
-        return {"text": response.content[0].text}
+        return {"matched_requirements": matched_requirements}
             
     except Exception as e:
         # Clean up file in case of error

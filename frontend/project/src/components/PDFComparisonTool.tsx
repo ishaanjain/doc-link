@@ -125,7 +125,22 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
           }
   
           const data = await response.json();
-          setRightText(data.text);
+          
+          // Handle the new JSON response structure
+          const matchedRequirements = data.matched_requirements || [];
+          
+          if (matchedRequirements.length === 0) {
+              setRightText('No matching requirements found in the document.');
+          } else {
+              // Format the matched requirements as readable text
+              const displayText = matchedRequirements.map((match: any, index: number) => {
+                  const confidenceBadge = match.confidence ? `[${match.confidence.toUpperCase()}]` : '[UNKNOWN]';
+                  const matchedText = match.matched_text || 'No matching text found';
+                  
+                  return `${index + 1}. ${match.requirement}\n\nMatched Text ${confidenceBadge}: ${matchedText}\n\n---\n`;
+              }).join('\n');
+              setRightText(displayText);
+          }
       } catch (err) {
           setError('Failed to match requirements. Please try again.');
           console.error('Error matching requirements:', err);
