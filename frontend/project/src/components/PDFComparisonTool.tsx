@@ -14,8 +14,8 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
   const [error, setError] = useState<string | null>(null);
   const [isConvertingLeft, setIsConvertingLeft] = useState(false);
   const [isConvertingRight, setIsConvertingRight] = useState(false);
-  // Add state to store the requirements JSON
   const [requirementsJson, setRequirementsJson] = useState<string | null>(null);
+  const [matchedRequirements, setMatchedRequirements] = useState<any[]>([]);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => {
     const file = event.target.files?.[0];
@@ -23,6 +23,8 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
       if (side === 'left') {
         setLeftFile(file);
         setLeftText(null);
+        setRequirementsJson(null);
+        setMatchedRequirements([]);
       } else {
         setRightFile(file);
         setRightText(null);
@@ -38,6 +40,8 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
       if (side === 'left') {
         setLeftFile(file);
         setLeftText(null);
+        setRequirementsJson(null);
+        setMatchedRequirements([]);
       } else {
         setRightFile(file);
         setRightText(null);
@@ -63,6 +67,8 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
       const formData = new FormData();
       formData.append('file', leftFile);
   
+      console.log('Sending left PDF for extraction:', leftFile.name);
+  
       const response = await fetch('http://localhost:8000/api/convert-requirements', {
         method: 'POST',
         body: formData,
@@ -73,16 +79,21 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
       }
   
       const data = await response.json();
+      console.log('Received requirements data:', data);
       
       // Always expect an array now
       const requirements = data.requirements || [];
-      
-      // Store the requirements JSON for later use
-      setRequirementsJson(JSON.stringify(requirements));
+      console.log('Extracted requirements:', requirements);
       
       if (requirements.length === 0) {
         setLeftText('No requirements found in the document.');
+        setRequirementsJson(null);
       } else {
+        // Store the requirements JSON for later use
+        const jsonString = JSON.stringify(requirements);
+        console.log('Storing requirements JSON:', jsonString);
+        setRequirementsJson(jsonString);
+        
         // Format array as readable text
         const displayText = requirements.map((req: any, index: number) => 
           `${index + 1}. ${req.requirement}\n\nSource: ${req.req_file_txt}\n\n---\n`
@@ -90,63 +101,94 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
         setLeftText(displayText);
       }
     } catch (err) {
+      console.error('Error in convertLeftToRequirements:', err);
       setError('Failed to convert PDF to requirements. Please try again.');
-      console.error('Error converting PDF to requirements:', err);
+      setRequirementsJson(null);
     } finally {
       setIsConvertingLeft(false);
     }
   };
 
   const matchRightRequirements = async () => {
-      if (!rightFile) {
-          setError('Please upload the right PDF file first.');
-          return;
+    if (!rightFile) {
+      setError('Please upload the right PDF file first.');
+      return;
+    }
+
+    if (!requirementsJson) {
+      setError('Please extract requirements from the left PDF first.');
+      return;
+    }
+
+    setIsConvertingRight(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', rightFile);
+      
+      if (requirementsJson) {
+        formData.append('requirements_json', requirementsJson);
       }
-  
-      setIsConvertingRight(true);
-      setError(null);
-  
-      try {
-          const formData = new FormData();
-          formData.append('file', rightFile);
-          
-          // Conditionally include requirements_json if available
-          if (requirementsJson) {
-              formData.append('requirements_json', requirementsJson);
-          }
-  
-          const response = await fetch('http://localhost:8000/api/match-requirements', {
-              method: 'POST',
-              body: formData,
-          });
-  
-          if (!response.ok) {
-              throw new Error('Failed to match requirements');
-          }
-  
-          const data = await response.json();
-          
-          // Handle the new JSON response structure
-          const matchedRequirements = data.matched_requirements || [];
-          
-          if (matchedRequirements.length === 0) {
-              setRightText('No matching requirements found in the document.');
-          } else {
-              // Format the matched requirements as readable text
-              const displayText = matchedRequirements.map((match: any, index: number) => {
-                  const confidenceBadge = match.confidence ? `[${match.confidence.toUpperCase()}]` : '[UNKNOWN]';
-                  const matchedText = match.matched_text || 'No matching text found';
-                  
-                  return `${index + 1}. ${match.requirement}\n\nMatched Text ${confidenceBadge}: ${matchedText}\n\n---\n`;
-              }).join('\n');
-              setRightText(displayText);
-          }
-      } catch (err) {
-          setError('Failed to match requirements. Please try again.');
-          console.error('Error matching requirements:', err);
-      } finally {
-          setIsConvertingRight(false);
+
+      console.log('Sending requirements JSON:', requirementsJson);
+      console.log('Right file being sent:', rightFile.name);
+
+      const response = await fetch('http://localhost:8000/api/match-requirements', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to match requirements');
       }
+
+      const data = await response.json();
+      console.log('Raw response data:', data);
+      console.log('Matched requirements array:', data.matched_requirements);
+      
+      // Filter to only include high confidence matches, case-insensitive
+      const matchedReqs = (data.matched_requirements || []).filter((match: any) => {
+        console.log('Individual match:', match);
+        console.log('Confidence level:', match.confidence);
+        const isHigh = match.confidence && match.confidence.toUpperCase() === 'HIGH';
+        console.log('Is high confidence?', isHigh);
+        return isHigh;
+      });
+      
+      console.log('Final filtered matches:', matchedReqs);
+      setMatchedRequirements(matchedReqs);
+      
+      if (matchedReqs.length === 0) {
+        setRightText('No high-confidence matching requirements found in the document.');
+      } else {
+        const displayText = matchedReqs.map((match: any, index: number) => {
+          const matchedText = match.matched_text || 'No matching text found';
+          return `${index + 1}. ${match.requirement}\n\nMatched Text [HIGH]: ${matchedText}\n\n---\n`;
+        }).join('\n');
+        setRightText(displayText);
+      }
+    } catch (err) {
+      console.error('Error in matchRightRequirements:', err);
+      setError('Failed to match requirements. Please try again.');
+    } finally {
+      setIsConvertingRight(false);
+    }
+  };
+
+  const handleHighlightClick = (text: string) => {
+    // Find the matching requirement in the right PDF
+    const matchingReq = matchedRequirements.find(req => 
+      req.matched_text && req.matched_text.includes(text)
+    );
+
+    if (matchingReq) {
+      // Scroll to the matching text in the right PDF
+      const rightViewer = document.querySelector('.right-pdf-viewer');
+      if (rightViewer) {
+        rightViewer.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
   };
 
   return (
@@ -202,9 +244,10 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
             side="left"
             convertedText={leftText || undefined}
             isDarkMode={isDarkMode}
+            onHighlightClick={handleHighlightClick}
           />
         </div>
-        <div className="h-full overflow-hidden">
+        <div className="h-full overflow-hidden right-pdf-viewer">
           <PDFViewer
             file={rightFile}
             onFileChange={(e) => handleFileChange(e, 'right')}

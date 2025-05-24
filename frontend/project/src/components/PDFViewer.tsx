@@ -16,6 +16,7 @@ interface PDFViewerProps {
   side: 'left' | 'right';
   convertedText?: string;
   isDarkMode?: boolean;
+  onHighlightClick?: (text: string) => void;
 }
 
 const PDFViewer: React.FC<PDFViewerProps> = ({
@@ -25,7 +26,8 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   onDragOver,
   side,
   convertedText,
-  isDarkMode = false
+  isDarkMode = false,
+  onHighlightClick
 }) => {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -35,20 +37,28 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [sourceTexts, setSourceTexts] = useState<string[]>([]);
+  const [currentFileId, setCurrentFileId] = useState<string>('');
 
   // Reset state when file changes
   useEffect(() => {
     if (file) {
       const url = URL.createObjectURL(file);
+      const newFileId = `${file.name}-${Date.now()}`; // Create unique ID for the file
       setFileUrl(url);
+      setCurrentFileId(newFileId);
       setPageNumber(1);
       setScale(1.0);
       setShowText(false);
       setError(null);
       setSourceTexts([]);
-      return () => URL.revokeObjectURL(url);
+      setNumPages(null);
+      return () => {
+        URL.revokeObjectURL(url);
+        setSourceTexts([]);
+      };
     } else {
       setFileUrl(null);
+      setCurrentFileId('');
       setNumPages(null);
       setPageNumber(1);
       setScale(1.0);
@@ -60,14 +70,16 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 
   // Extract source texts when convertedText changes
   useEffect(() => {
-    if (convertedText) {
+    if (convertedText && currentFileId) {
       const sources = convertedText
         .split('\n\nSource: ')
-        .slice(1) // Skip the first element as it's the requirement
+        .slice(1)
         .map(text => text.split('\n\n---')[0].trim());
       setSourceTexts(sources);
+    } else {
+      setSourceTexts([]);
     }
-  }, [convertedText]);
+  }, [convertedText, currentFileId]);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -104,6 +116,12 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     setIsDragging(false);
     onDrop(e);
+  };
+
+  const handleHighlightClick = (text: string) => {
+    if (onHighlightClick) {
+      onHighlightClick(text);
+    }
   };
 
   return (
@@ -218,11 +236,14 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
                       // Only highlight non-empty text that matches the source, excluding periods and single letters with periods
                       const isHighlighted = str.trim() !== '' && 
                         str !== '.' && 
-                        !/^[a-z]\.$/i.test(str) && // Exclude single letters with periods (case insensitive)
+                        !/^[a-z]\.$/i.test(str) && 
                         sourceTexts.some(source => 
                           str.includes(source) || source.includes(str)
                         );
-                      return isHighlighted ? `<span style="background-color: yellow; opacity: 0.5;">${str}</span>` : str;
+                      if (isHighlighted) {
+                        return `<span style="background-color: yellow; opacity: 0.5; cursor: pointer;" onclick="window.handleHighlightClick('${str.replace(/'/g, "\\'")}')">${str}</span>`;
+                      }
+                      return str;
                     }}
                   />
                 </Document>
