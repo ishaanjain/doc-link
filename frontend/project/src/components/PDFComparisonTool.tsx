@@ -56,20 +56,20 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
 
     setIsConvertingLeft(true);
     setError(null);
-
+  
     try {
       const formData = new FormData();
       formData.append('file', leftFile);
-
+  
       const response = await fetch('http://localhost:8000/api/convert-requirements', {
         method: 'POST',
         body: formData,
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to convert PDF to requirements');
       }
-
+  
       const data = await response.json();
       setLeftText(data.requirements);
     } catch (err) {
@@ -80,36 +80,36 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
     }
   };
 
-  const convertRightToText = async () => {
-    if (!rightFile) {
-      setError('Please upload the right PDF file first.');
-      return;
-    }
-
-    setIsConvertingRight(true);
-    setError(null);
-
-    try {
-      const formData = new FormData();
-      formData.append('file', rightFile);
-
-      const response = await fetch('http://localhost:8000/api/convert-text', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to convert PDF to text');
+  const matchRightRequirements = async () => {
+      if (!rightFile) {
+          setError('Please upload the right PDF file first.');
+          return;
       }
-
-      const data = await response.json();
-      setRightText(data.text);
-    } catch (err) {
-      setError('Failed to convert PDF to text. Please try again.');
-      console.error('Error converting PDF to text:', err);
-    } finally {
-      setIsConvertingRight(false);
-    }
+  
+      setIsConvertingRight(true);
+      setError(null);
+  
+      try {
+          const formData = new FormData();
+          formData.append('file', rightFile);
+  
+          const response = await fetch('http://localhost:8000/api/match-requirements', {
+              method: 'POST',
+              body: formData,
+          });
+  
+          if (!response.ok) {
+              throw new Error('Failed to match requirements');
+          }
+  
+          const data = await response.json();
+          setRightText(data.text);
+      } catch (err) {
+          setError('Failed to match requirements. Please try again.');
+          console.error('Error matching requirements:', err);
+      } finally {
+          setIsConvertingRight(false);
+      }
   };
 
   return (
@@ -134,7 +134,7 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
               <span>{isConvertingLeft ? 'Converting...' : 'Extract Requirements'}</span>
             </button>
             <button
-              onClick={convertRightToText}
+              onClick={matchRightRequirements}
               disabled={!rightFile || isConvertingRight}
               className={`px-4 py-2 rounded-md shadow-sm transition-colors flex items-center space-x-2 ${
                 !rightFile || isConvertingRight
@@ -143,7 +143,7 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
               }`}
             >
               <Type className="w-4 h-4" />
-              <span>{isConvertingRight ? 'Converting...' : 'Convert to Text'}</span>
+              <span>{isConvertingRight ? 'Matching...' : 'Match Requirements'}</span>
             </button>
           </div>
         </div>

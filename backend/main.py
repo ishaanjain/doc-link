@@ -109,8 +109,8 @@ async def convert_to_requirements(file: UploadFile = File(...)):
             pass
         raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
 
-@app.post("/api/convert-text")
-async def convert_to_text(file: UploadFile = File(...), requirements_json: str = Form(None)):
+@app.post("/api/match-requirements")
+async def match_requirements(file: UploadFile = File(...), requirements_json: str = Form(None)):
     if not file.filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
     
