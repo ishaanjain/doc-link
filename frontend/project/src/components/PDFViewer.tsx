@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import React, { useState, useEffect, useRef } from 'react';
 import { FileUp, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, FileText } from 'lucide-react';
 import LoadingSpinner from './ui/LoadingSpinner';
-import 'react-pdf/dist/Page/TextLayer.css';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
+import * as pdfjsLib from 'pdfjs-dist';
 
-// Set the worker source for react-pdf
-pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+// Set the worker source for PDF.js
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
 
 interface PDFViewerProps {
   file: File | null;
@@ -33,20 +31,21 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   const [showText, setShowText] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [pdfDocument, setPdfDocument] = useState<pdfjsLib.PDFDocumentProxy | null>(null);
+  
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Reset state when file changes
+  // Load PDF document when file changes
   useEffect(() => {
     if (file) {
-      const url = URL.createObjectURL(file);
-      setFileUrl(url);
+      loadPDF(file);
       setPageNumber(1);
       setScale(1.0);
       setShowText(false);
       setError(null);
-      return () => URL.revokeObjectURL(url);
     } else {
-      setFileUrl(null);
+      setPdfDocument(null);
       setNumPages(null);
       setPageNumber(1);
       setScale(1.0);
@@ -55,15 +54,55 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
     }
   }, [file]);
 
-  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
-    setPageNumber(1);
+  // Render page when page number or scale changes
+  useEffect(() => {
+    if (pdfDocument && !showText) {
+      renderPage(pageNumber);
+    }
+  }, [pdfDocument, pageNumber, scale, showText]);
+
+  const loadPDF = async (file: File) => {
+    setIsLoading(true);
     setError(null);
+    
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      setPdfDocument(pdf);
+      setNumPages(pdf.numPages);
+    } catch (err) {
+      console.error('Error loading PDF:', err);
+      setError('Failed to load the PDF. Please try another file.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const onDocumentLoadError = (error: Error) => {
-    console.error('Error loading PDF:', error);
-    setError('Failed to load the PDF. Please try another file.');
+  const renderPage = async (pageNum: number) => {
+    if (!pdfDocument || !canvasRef.current) return;
+    
+    try {
+      const page = await pdfDocument.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
+      
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
+      
+      if (!context) return;
+      
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport,
+      };
+      
+      await page.render(renderContext).promise;
+    } catch (err) {
+      console.error('Error rendering page:', err);
+      setError('Failed to render the page.');
+    }
   };
 
   const changePage = (offset: number) => {
@@ -179,29 +218,21 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
                   {convertedText}
                 </div>
               ) : (
-                <Document
-                  file={fileUrl}
-                  onLoadSuccess={onDocumentLoadSuccess}
-                  onLoadError={onDocumentLoadError}
-                  loading={
-                    <div className="flex justify-center items-center h-full">
-                      <LoadingSpinner />
-                    </div>
-                  }
-                  error={
+                <div className="flex justify-center items-center h-full">
+                  {isLoading ? (
+                    <LoadingSpinner />
+                  ) : error ? (
                     <div className="text-center p-6 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/50 rounded-lg">
-                      {error || 'Failed to load PDF.'}
+                      {error}
                     </div>
-                  }
-                >
-                  <Page 
-                    pageNumber={pageNumber} 
-                    scale={scale}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
-                    className="mx-auto shadow-lg"
-                  />
-                </Document>
+                  ) : (
+                    <canvas 
+                      ref={canvasRef}
+                      className="mx-auto shadow-lg max-w-full h-auto"
+                      style={{ maxHeight: '100%' }}
+                    />
+                  )}
+                </div>
               )}
             </div>
           </div>
