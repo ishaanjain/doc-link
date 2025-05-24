@@ -14,6 +14,8 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
   const [error, setError] = useState<string | null>(null);
   const [isConvertingLeft, setIsConvertingLeft] = useState(false);
   const [isConvertingRight, setIsConvertingRight] = useState(false);
+  // Add state to store the requirements JSON
+  const [requirementsJson, setRequirementsJson] = useState<string | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => {
     const file = event.target.files?.[0];
@@ -75,6 +77,9 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
       // Always expect an array now
       const requirements = data.requirements || [];
       
+      // Store the requirements JSON for later use
+      setRequirementsJson(JSON.stringify(requirements));
+      
       if (requirements.length === 0) {
         setLeftText('No requirements found in the document.');
       } else {
@@ -104,6 +109,11 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
       try {
           const formData = new FormData();
           formData.append('file', rightFile);
+          
+          // Conditionally include requirements_json if available
+          if (requirementsJson) {
+              formData.append('requirements_json', requirementsJson);
+          }
   
           const response = await fetch('http://localhost:8000/api/match-requirements', {
               method: 'POST',
