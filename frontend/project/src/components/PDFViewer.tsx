@@ -99,6 +99,96 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
       };
       
       await page.render(renderContext).promise;
+
+      // Extract text content with better coordinate handling
+      const textContent = await page.getTextContent();
+      let fullText = '';
+      const textItems: Array<{text: string, x: number, y: number, width: number, height: number}> = [];
+  
+      // Build text items with proper positioning
+      for (const item of textContent.items) {
+        if ('str' in item && item.str.trim()) {
+          const transform = item.transform;
+          const x = transform[4];
+          const y = transform[5];
+          const textWidth = item.width || 0;
+          const textHeight = item.height || 12;
+          
+          const normalizedText = item.str
+            .replace(/\n/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim();
+          
+          textItems.push({
+            text: normalizedText,
+            x: x,
+            y: y,
+            width: textWidth,
+            height: textHeight
+          });
+          
+          // Add space between items if needed
+          if (fullText && normalizedText && !fullText.endsWith(' ') && !normalizedText.startsWith(' ')) {
+            fullText += ' ';
+          }
+          fullText += normalizedText;
+        }
+      }
+  
+      // Additional normalization for the concatenated full text
+      fullText = fullText
+        .replace(/\n/g, ' ')     // Replace any remaining newlines with spaces
+        .replace(/\s+/g, ' ')   // Replace multiple spaces with single space
+        .trim();                // Remove leading/trailing whitespace
+  
+      // Highlight target text
+      const targetStr = 'This document requires that a process be established to develop and manage verification requirements to assure that launch and space equipment can function correctly and withstand stresses it may encounter during its life cycle including end-of-life performance requirements.';
+      console.log("🚨🚨🚨🚨")
+      console.log(fullText.toLowerCase())
+      const targetIndex = fullText.toLowerCase().indexOf(targetStr.toLowerCase());
+      
+      if (targetIndex !== -1) {
+        console.log("we found the target string")
+        // Find which text items contain our target string
+        let currentIndex = 0;
+        let startItem = null;
+        let endItem = null;
+        
+        for (let i = 0; i < textItems.length; i++) {
+          const item = textItems[i];
+          const itemStart = currentIndex;
+          const itemEnd = currentIndex + item.text.length;
+          
+          if (targetIndex >= itemStart && targetIndex < itemEnd && !startItem) {
+            startItem = { item, offset: targetIndex - itemStart };
+          }
+          
+          if (targetIndex + targetStr.length > itemStart && targetIndex + targetStr.length <= itemEnd && !endItem) {
+            endItem = { item, offset: targetIndex + targetStr.length - itemStart };
+          }
+          
+          currentIndex += item.text.length;
+          
+          if (startItem && endItem) break;
+        }
+        
+        if (startItem && endItem) {
+          // Calculate highlight rectangle
+          const startX = startItem.item.x;
+          const startY = viewport.height - startItem.item.y; // Convert to canvas coordinates
+          const endX = endItem.item.x + (endItem.offset / endItem.item.text.length) * endItem.item.width;
+          const height = Math.max(startItem.item.height, 12); // Minimum height
+          
+          context.fillStyle = 'rgba(255, 255, 0, 0.4)';
+          context.fillRect(
+            startX,
+            startY - height, // Adjust for text baseline
+            endX - startX,
+            height
+          );
+          console.log("there's a start and end item")
+        }
+      }
     } catch (err) {
       console.error('Error rendering page:', err);
       setError('Failed to render the page.');
