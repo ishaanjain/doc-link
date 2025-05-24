@@ -34,6 +34,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
+  const [sourceTexts, setSourceTexts] = useState<string[]>([]);
 
   // Reset state when file changes
   useEffect(() => {
@@ -44,6 +45,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
       setScale(1.0);
       setShowText(false);
       setError(null);
+      setSourceTexts([]);
       return () => URL.revokeObjectURL(url);
     } else {
       setFileUrl(null);
@@ -52,8 +54,20 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
       setScale(1.0);
       setShowText(false);
       setError(null);
+      setSourceTexts([]);
     }
   }, [file]);
+
+  // Extract source texts when convertedText changes
+  useEffect(() => {
+    if (convertedText) {
+      const sources = convertedText
+        .split('\n\nSource: ')
+        .slice(1) // Skip the first element as it's the requirement
+        .map(text => text.split('\n\n---')[0].trim());
+      setSourceTexts(sources);
+    }
+  }, [convertedText]);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -129,7 +143,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
         </div>
       </div>
 
-      <div 
+      <div
         className={`flex-grow overflow-auto relative transition-colors duration-200 ${
           isDragging ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-gray-50 dark:bg-gray-900/50'
         }`}
@@ -197,9 +211,19 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
                   <Page 
                     pageNumber={pageNumber} 
                     scale={scale}
-                    renderTextLayer={false}
-                    renderAnnotationLayer={false}
+                    renderTextLayer={true}
+                    renderAnnotationLayer={true}
                     className="mx-auto shadow-lg"
+                    customTextRenderer={({ str, itemIndex }) => {
+                      // Only highlight non-empty text that matches the source, excluding periods and single letters with periods
+                      const isHighlighted = str.trim() !== '' && 
+                        str !== '.' && 
+                        !/^[a-z]\.$/i.test(str) && // Exclude single letters with periods (case insensitive)
+                        sourceTexts.some(source => 
+                          str.includes(source) || source.includes(str)
+                        );
+                      return isHighlighted ? `<span style="background-color: yellow; opacity: 0.5;">${str}</span>` : str;
+                    }}
                   />
                 </Document>
               )}
