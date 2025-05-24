@@ -1,42 +1,44 @@
 import React, { useState } from 'react';
 import PDFViewer from './PDFViewer';
-import { FileUp, Info, Upload, FileText, AlertCircle } from 'lucide-react';
-import axios from 'axios';
+import { FileText, AlertCircle } from 'lucide-react';
 
-const PDFComparisonTool: React.FC = () => {
-  const [leftPdfFile, setLeftPdfFile] = useState<File | null>(null);
-  const [rightPdfFile, setRightPdfFile] = useState<File | null>(null);
-  const [infoVisible, setInfoVisible] = useState(true);
-  const [isConverting, setIsConverting] = useState(false);
-  const [convertedTexts, setConvertedTexts] = useState<{ left?: string; right?: string }>({});
+interface PDFComparisonToolProps {
+  isDarkMode?: boolean;
+}
+
+const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = false }) => {
+  const [leftFile, setLeftFile] = useState<File | null>(null);
+  const [rightFile, setRightFile] = useState<File | null>(null);
+  const [leftText, setLeftText] = useState<string | null>(null);
+  const [rightText, setRightText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isConverting, setIsConverting] = useState(false);
 
-  const handleLeftFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setLeftPdfFile(event.target.files[0]);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (side === 'left') {
+        setLeftFile(file);
+        setLeftText(null);
+      } else {
+        setRightFile(file);
+        setRightText(null);
+      }
       setError(null);
     }
   };
 
-  const handleRightFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files[0]) {
-      setRightPdfFile(event.target.files[0]);
-      setError(null);
-    }
-  };
-
-  const handleLeftDrop = (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>, side: 'left' | 'right') => {
     event.preventDefault();
-    if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-      setLeftPdfFile(event.dataTransfer.files[0]);
-      setError(null);
-    }
-  };
-
-  const handleRightDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    if (event.dataTransfer.files && event.dataTransfer.files[0]) {
-      setRightPdfFile(event.dataTransfer.files[0]);
+    const file = event.dataTransfer.files?.[0];
+    if (file && file.type === 'application/pdf') {
+      if (side === 'left') {
+        setLeftFile(file);
+        setLeftText(null);
+      } else {
+        setRightFile(file);
+        setRightText(null);
+      }
       setError(null);
     }
   };
@@ -45,126 +47,91 @@ const PDFComparisonTool: React.FC = () => {
     event.preventDefault();
   };
 
-  const closeInfo = () => {
-    setInfoVisible(false);
-  };
-
-  const handleConvert = async () => {
-    if (!leftPdfFile && !rightPdfFile) return;
+  const convertToText = async () => {
+    if (!leftFile || !rightFile) {
+      setError('Please upload both PDF files first.');
+      return;
+    }
 
     setIsConverting(true);
     setError(null);
-    const formData = new FormData();
-    if (leftPdfFile) formData.append('pdfs', leftPdfFile);
-    if (rightPdfFile) formData.append('pdfs', rightPdfFile);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/convert', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      const formData = new FormData();
+      formData.append('left_file', leftFile);
+      formData.append('right_file', rightFile);
+
+      const response = await fetch('http://localhost:8000/api/convert', {
+        method: 'POST',
+        body: formData,
       });
 
-      if (response.data.success) {
-        const results = response.data.results;
-        const newConvertedTexts: { left?: string; right?: string } = {};
-        
-        if (leftPdfFile && results[0]) {
-          newConvertedTexts.left = results[0].textContent;
-        }
-        if (rightPdfFile && results[1]) {
-          newConvertedTexts.right = results[1].textContent;
-        }
-        
-        setConvertedTexts(newConvertedTexts);
+      if (!response.ok) {
+        throw new Error('Failed to convert PDFs');
       }
-    } catch (error) {
-      console.error('Error converting PDFs:', error);
-      setError('Error converting PDFs. Please try again.');
+
+      const data = await response.json();
+      setLeftText(data.left_text);
+      setRightText(data.right_text);
+    } catch (err) {
+      setError('Failed to convert PDFs. Please try again.');
+      console.error('Error converting PDFs:', err);
     } finally {
       setIsConverting(false);
     }
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      {infoVisible && (
-        <div className="mb-6 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-lg p-4 flex items-start shadow-sm transition-all duration-300 hover:shadow-md">
-          <Info className="text-blue-500 w-5 h-5 mt-0.5 mr-3 flex-shrink-0" />
-          <div className="flex-grow">
-            <h3 className="font-medium text-blue-800 mb-1">How to use this tool</h3>
-            <p className="text-blue-700 text-sm">
-              Upload PDFs to both panels using the file buttons or drag and drop. 
-              You can then scroll each PDF independently to compare content. 
-              Each viewer supports zooming and navigation controls.
-            </p>
+    <div className="flex flex-col h-[calc(100vh-12rem)]">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 p-4 rounded-lg shadow-sm mb-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <FileText className="w-5 h-5 text-blue-500 dark:text-blue-400" />
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white">PDF Comparison Tool</h2>
           </div>
-          <button 
-            onClick={closeInfo}
-            className="text-blue-500 hover:text-blue-700 ml-3 transition-colors duration-200"
-            aria-label="Close info"
+          <button
+            onClick={convertToText}
+            disabled={!leftFile || !rightFile || isConverting}
+            className={`px-4 py-2 rounded-md shadow-sm transition-colors ${
+              !leftFile || !rightFile || isConverting
+                ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                : 'bg-blue-500 hover:bg-blue-600 text-white'
+            }`}
           >
-            &times;
+            {isConverting ? 'Converting...' : 'Convert to Text'}
           </button>
         </div>
-      )}
-
-      {error && (
-        <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start animate-fade-in">
-          <AlertCircle className="text-red-500 w-5 h-5 mt-0.5 mr-3 flex-shrink-0" />
-          <p className="text-red-700">{error}</p>
-        </div>
-      )}
-
-      <div className="flex flex-col md:flex-row gap-6 h-[calc(100vh-16rem)]">
-        {/* Left PDF Panel */}
-        <div className="flex-1 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-lg transition-all duration-300 hover:shadow-xl">
-          <PDFViewer 
-            file={leftPdfFile} 
-            onFileChange={handleLeftFileChange} 
-            onDrop={handleLeftDrop} 
-            onDragOver={handleDragOver} 
-            side="left"
-            convertedText={convertedTexts.left}
-          />
-        </div>
-
-        {/* Right PDF Panel */}
-        <div className="flex-1 border border-gray-200 rounded-lg overflow-hidden bg-white shadow-lg transition-all duration-300 hover:shadow-xl">
-          <PDFViewer 
-            file={rightPdfFile} 
-            onFileChange={handleRightFileChange} 
-            onDrop={handleRightDrop} 
-            onDragOver={handleDragOver} 
-            side="right"
-            convertedText={convertedTexts.right}
-          />
-        </div>
+        {error && (
+          <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/50 rounded-md flex items-center space-x-2 text-red-600 dark:text-red-400 animate-fade-in">
+            <AlertCircle className="w-5 h-5" />
+            <span>{error}</span>
+          </div>
+        )}
       </div>
 
-      {/* Convert Button */}
-      <div className="mt-6 flex justify-center">
-        <button
-          onClick={handleConvert}
-          disabled={isConverting || (!leftPdfFile && !rightPdfFile)}
-          className={`flex items-center px-6 py-3 rounded-lg text-lg font-medium transition-all duration-300 transform hover:scale-105 ${
-            isConverting || (!leftPdfFile && !rightPdfFile)
-              ? 'bg-gray-300 cursor-not-allowed'
-              : 'bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl'
-          }`}
-        >
-          {isConverting ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-              Converting...
-            </>
-          ) : (
-            <>
-              <FileText className="w-5 h-5 mr-2" />
-              Convert to Text
-            </>
-          )}
-        </button>
+      <div className="flex-1 grid grid-cols-2 gap-4 overflow-hidden">
+        <div className="h-full overflow-hidden">
+          <PDFViewer
+            file={leftFile}
+            onFileChange={(e) => handleFileChange(e, 'left')}
+            onDrop={(e) => handleDrop(e, 'left')}
+            onDragOver={handleDragOver}
+            side="left"
+            convertedText={leftText || undefined}
+            isDarkMode={isDarkMode}
+          />
+        </div>
+        <div className="h-full overflow-hidden">
+          <PDFViewer
+            file={rightFile}
+            onFileChange={(e) => handleFileChange(e, 'right')}
+            onDrop={(e) => handleDrop(e, 'right')}
+            onDragOver={handleDragOver}
+            side="right"
+            convertedText={rightText || undefined}
+            isDarkMode={isDarkMode}
+          />
+        </div>
       </div>
     </div>
   );

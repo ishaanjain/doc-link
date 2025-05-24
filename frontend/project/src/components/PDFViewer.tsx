@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import { FileUp, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, FileText, X } from 'lucide-react';
+import { FileUp, ChevronLeft, ChevronRight, ZoomIn, ZoomOut, FileText } from 'lucide-react';
 import LoadingSpinner from './ui/LoadingSpinner';
 import 'react-pdf/dist/Page/TextLayer.css';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
@@ -15,6 +15,7 @@ interface PDFViewerProps {
   onDragOver: (event: React.DragEvent<HTMLDivElement>) => void;
   side: 'left' | 'right';
   convertedText?: string;
+  isDarkMode?: boolean;
 }
 
 const PDFViewer: React.FC<PDFViewerProps> = ({
@@ -23,7 +24,8 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   onDrop,
   onDragOver,
   side,
-  convertedText
+  convertedText,
+  isDarkMode = false
 }) => {
   const [numPages, setNumPages] = useState<number | null>(null);
   const [pageNumber, setPageNumber] = useState(1);
@@ -31,6 +33,27 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
   const [showText, setShowText] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+
+  // Reset state when file changes
+  useEffect(() => {
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setFileUrl(url);
+      setPageNumber(1);
+      setScale(1.0);
+      setShowText(false);
+      setError(null);
+      return () => URL.revokeObjectURL(url);
+    } else {
+      setFileUrl(null);
+      setNumPages(null);
+      setPageNumber(1);
+      setScale(1.0);
+      setShowText(false);
+      setError(null);
+    }
+  }, [file]);
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages);
@@ -71,12 +94,12 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200 p-3 flex items-center justify-between">
-        <div className="text-sm font-medium text-gray-700 flex items-center">
-          <FileText className="w-4 h-4 mr-2 text-gray-500" />
+      <div className={`bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-700 p-3 flex items-center justify-between flex-shrink-0`}>
+        <div className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+          <FileText className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
           {side === 'left' ? 'Left Document' : 'Right Document'}
           {file && (
-            <span className="ml-2 text-xs text-gray-500 truncate max-w-[200px]">
+            <span className="ml-2 text-xs text-gray-500 dark:text-gray-400 truncate max-w-[200px]">
               ({file.name})
             </span>
           )}
@@ -86,20 +109,20 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
             <>
               <button 
                 onClick={zoomOut} 
-                className="p-1.5 rounded-md hover:bg-white transition-colors shadow-sm"
+                className="p-1.5 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-colors shadow-sm"
                 aria-label="Zoom out"
               >
-                <ZoomOut size={16} className="text-gray-600" />
+                <ZoomOut size={16} className="text-gray-600 dark:text-gray-300" />
               </button>
-              <span className="text-sm text-gray-600 min-w-[60px] text-center">
+              <span className="text-sm text-gray-600 dark:text-gray-300 min-w-[60px] text-center">
                 {Math.round(scale * 100)}%
               </span>
               <button 
                 onClick={zoomIn} 
-                className="p-1.5 rounded-md hover:bg-white transition-colors shadow-sm"
+                className="p-1.5 rounded-md hover:bg-white dark:hover:bg-gray-700 transition-colors shadow-sm"
                 aria-label="Zoom in"
               >
-                <ZoomIn size={16} className="text-gray-600" />
+                <ZoomIn size={16} className="text-gray-600 dark:text-gray-300" />
               </button>
             </>
           )}
@@ -108,7 +131,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 
       <div 
         className={`flex-grow overflow-auto relative transition-colors duration-200 ${
-          isDragging ? 'bg-blue-50' : 'bg-gray-50'
+          isDragging ? 'bg-blue-50 dark:bg-blue-900/20' : 'bg-gray-50 dark:bg-gray-900/50'
         }`}
         onDrop={handleDrop}
         onDragOver={onDragOver}
@@ -116,34 +139,34 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
         onDragLeave={handleDragLeave}
       >
         {file ? (
-          <div className="flex-1 flex flex-col">
-            <div className="flex justify-between items-center p-2 bg-white border-b shadow-sm">
+          <div className="flex flex-col h-full">
+            <div className="flex justify-between items-center p-2 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 shadow-sm flex-shrink-0">
               <div className="flex items-center space-x-2">
                 <button
                   onClick={previousPage}
                   disabled={pageNumber <= 1}
-                  className="px-3 py-1.5 bg-white border rounded-md shadow-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:hover:bg-white"
+                  className="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
                 >
-                  <ChevronLeft size={16} className="text-gray-600" />
+                  <ChevronLeft size={16} className="text-gray-600 dark:text-gray-300" />
                 </button>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm text-gray-600 dark:text-gray-300">
                   Page {pageNumber} of {numPages || '--'}
                 </span>
                 <button
                   onClick={nextPage}
                   disabled={pageNumber >= (numPages || 1)}
-                  className="px-3 py-1.5 bg-white border rounded-md shadow-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:hover:bg-white"
+                  className="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:hover:bg-white dark:disabled:hover:bg-gray-700"
                 >
-                  <ChevronRight size={16} className="text-gray-600" />
+                  <ChevronRight size={16} className="text-gray-600 dark:text-gray-300" />
                 </button>
               </div>
               {convertedText && (
                 <button
                   onClick={() => setShowText(!showText)}
-                  className="px-3 py-1.5 bg-white border rounded-md shadow-sm hover:bg-gray-50 transition-colors flex items-center space-x-1"
+                  className="px-3 py-1.5 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-md shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex items-center space-x-1"
                 >
-                  <FileText size={16} className="text-gray-600" />
-                  <span className="text-sm text-gray-600">
+                  <FileText size={16} className="text-gray-600 dark:text-gray-300" />
+                  <span className="text-sm text-gray-600 dark:text-gray-300">
                     {showText ? 'Show PDF' : 'Show Text'}
                   </span>
                 </button>
@@ -152,12 +175,12 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
 
             <div className="flex-1 overflow-auto p-4">
               {showText ? (
-                <div className="whitespace-pre-wrap font-mono text-sm bg-white p-4 rounded-lg shadow-sm">
+                <div className="whitespace-pre-wrap font-mono text-sm bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm text-gray-800 dark:text-gray-200">
                   {convertedText}
                 </div>
               ) : (
                 <Document
-                  file={file}
+                  file={fileUrl}
                   onLoadSuccess={onDocumentLoadSuccess}
                   onLoadError={onDocumentLoadError}
                   loading={
@@ -166,7 +189,7 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
                     </div>
                   }
                   error={
-                    <div className="text-center p-6 text-red-500 bg-red-50 rounded-lg">
+                    <div className="text-center p-6 text-red-500 dark:text-red-400 bg-red-50 dark:bg-red-900/50 rounded-lg">
                       {error || 'Failed to load PDF.'}
                     </div>
                   }
@@ -185,14 +208,16 @@ const PDFViewer: React.FC<PDFViewerProps> = ({
         ) : (
           <div className="flex flex-col items-center justify-center h-full p-8 text-center">
             <div className={`p-8 rounded-lg border-2 border-dashed transition-colors duration-200 ${
-              isDragging ? 'border-blue-400 bg-blue-50' : 'border-gray-300 bg-white'
+              isDragging 
+                ? 'border-blue-400 dark:border-blue-500 bg-blue-50 dark:bg-blue-900/20' 
+                : 'border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800'
             }`}>
-              <FileUp className="h-12 w-12 text-gray-400 mb-4 mx-auto" />
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Upload PDF</h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <FileUp className="h-12 w-12 text-gray-400 dark:text-gray-500 mb-4 mx-auto" />
+              <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">Upload PDF</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                 Drag and drop a PDF file here, or click the button below to browse
               </p>
-              <label className="inline-flex items-center px-4 py-2 border border-blue-500 rounded-md shadow-sm text-sm font-medium text-blue-500 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-colors">
+              <label className="inline-flex items-center px-4 py-2 border border-blue-500 dark:border-blue-400 rounded-md shadow-sm text-sm font-medium text-blue-500 dark:text-blue-400 bg-white dark:bg-gray-800 hover:bg-blue-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer transition-colors">
                 Select PDF
                 <input
                   type="file"

@@ -9,7 +9,7 @@ app = FastAPI()
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -20,43 +20,47 @@ os.makedirs("uploads", exist_ok=True)
 os.makedirs("texts", exist_ok=True)
 
 @app.post("/api/convert")
-async def convert_pdfs(pdfs: List[UploadFile] = File(...)):
-    if len(pdfs) > 2:
-        raise HTTPException(status_code=400, detail="Maximum 2 PDF files allowed")
+async def convert_pdfs(left_file: UploadFile = File(...), right_file: UploadFile = File(...)):
+    if not left_file.filename.lower().endswith('.pdf') or not right_file.filename.lower().endswith('.pdf'):
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
     
-    results = []
-    
-    for pdf in pdfs:
-        if not pdf.filename.lower().endswith('.pdf'):
-            raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+    try:
+        # Process left file
+        left_content = await left_file.read()
+        left_pdf_path = f"uploads/{left_file.filename}"
+        with open(left_pdf_path, "wb") as buffer:
+            buffer.write(left_content)
+        left_text = extract_text(left_pdf_path)
         
-        # Save PDF file
-        pdf_path = f"uploads/{pdf.filename}"
-        with open(pdf_path, "wb") as buffer:
-            content = await pdf.read()
-            buffer.write(content)
+        # Process right file
+        right_content = await right_file.read()
+        right_pdf_path = f"uploads/{right_file.filename}"
+        with open(right_pdf_path, "wb") as buffer:
+            buffer.write(right_content)
+        right_text = extract_text(right_pdf_path)
         
+        # Clean up the files after processing
         try:
-            # Convert PDF to text
-            text = extract_text(pdf_path)
-            
-            # Save text file
-            text_filename = pdf.filename.replace('.pdf', '.txt')
-            text_path = f"texts/{text_filename}"
-            with open(text_path, "w", encoding="utf-8") as f:
-                f.write(text)
-            
-            results.append({
-                "originalName": pdf.filename,
-                "textFilename": text_filename,
-                "textContent": text,
-                "size": len(content)
-            })
-            
-        except Exception as e:
-            raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
+            os.remove(left_pdf_path)
+            os.remove(right_pdf_path)
+        except:
+            pass  # Ignore cleanup errors
         
-    return {"success": True, "results": results}
+        return {
+            "left_text": left_text,
+            "right_text": right_text
+        }
+            
+    except Exception as e:
+        # Clean up files in case of error
+        try:
+            if 'left_pdf_path' in locals():
+                os.remove(left_pdf_path)
+            if 'right_pdf_path' in locals():
+                os.remove(right_pdf_path)
+        except:
+            pass
+        raise HTTPException(status_code=500, detail=f"Error processing PDFs: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn
