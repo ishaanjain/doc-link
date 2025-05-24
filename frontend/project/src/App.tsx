@@ -46,7 +46,7 @@ function App() {
       </div>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-          PDF Comparison Tool
+          SpecMatch: PDF Comparison Tool
         </h1>
         <PDFComparisonTool isDarkMode={isDarkMode} />
       </div>

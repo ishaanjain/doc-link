@@ -155,7 +155,7 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <FileText className="w-5 h-5 text-blue-500 dark:text-blue-400" />
-            <h2 className="text-lg font-medium text-gray-900 dark:text-white">PDF Comparison Tool</h2>
+            <h2 className="text-lg font-medium text-gray-900 dark:text-white">SpecMatch: PDF Comparison Tool</h2>
           </div>
           <div className="flex space-x-3">
             <button

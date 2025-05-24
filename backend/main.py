@@ -135,12 +135,12 @@ async def match_requirements(file: UploadFile = File(...), requirements_json: st
         if requirements_json is None:
             requirements_json = '''[
                 {
-                    "requirement": "Establish and document a verification process for launch, upper stage, and space vehicles that ensures equipment functions correctly throughout its lifecycle",
-                    "req_file_txt": "This document requires that a process be established to develop and manage verification requirements to assure that launch and space equipment can function correctly and withstand stresses it may encounter during its life cycle including end-of-life performance requirements."
+                "requirement": "Ensure CubeSat compatibility with standardized dispensers for safe and reliable deployment",
+                "req_file_txt": "The CubeSat Design Specification Rev. 14.1 outlines mechanical and electrical specifications, such as rail dimensions, deployment switch requirements, and separation mechanisms, to ensure CubeSats are compatible with rail-based or tab-based dispensers for safe integration and deployment."
                 },
                 {
-                    "requirement": "Document system requirements including performance requirements and external interfaces, and allocate them to subtier hardware and software",
-                    "req_file_txt": "The system requirements including performance requirements and external interfaces, shall be documented. The allocation of these system requirements to subtier hardware and software shall also be documented as subtier requirements."
+                "requirement": "Minimize orbital debris and ensure safe operation of CubeSats during launch and on-orbit phases",
+                "req_file_txt": "The specification mandates compliance with NPR 8715.6B for limiting orbital debris, requiring components to re-enter with less than 15 Joules of energy, and includes operational specifications like a 30-minute delay for deployable activation and 45-minute delay for RF transmission to ensure safe operation."
                 }
             ]'''
         
