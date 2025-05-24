@@ -71,7 +71,19 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
       }
   
       const data = await response.json();
-      setLeftText(data.requirements);
+      
+      // Always expect an array now
+      const requirements = data.requirements || [];
+      
+      if (requirements.length === 0) {
+        setLeftText('No requirements found in the document.');
+      } else {
+        // Format array as readable text
+        const displayText = requirements.map((req: any, index: number) => 
+          `${index + 1}. ${req.requirement}\n\nSource: ${req.req_file_txt}\n\n---\n`
+        ).join('\n');
+        setLeftText(displayText);
+      }
     } catch (err) {
       setError('Failed to convert PDF to requirements. Please try again.');
       console.error('Error converting PDF to requirements:', err);

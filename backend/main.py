@@ -92,13 +92,24 @@ async def convert_to_requirements(file: UploadFile = File(...)):
         # Extract requirements using Anthropic API
         requirements_json = await extract_requirements_with_anthropic(pdf_path)
         
+        # Parse the JSON string to return actual array, fallback to empty array
+        try:
+            import json
+            parsed_requirements = json.loads(requirements_json)
+            # Ensure it's a list
+            if not isinstance(parsed_requirements, list):
+                parsed_requirements = []
+        except (json.JSONDecodeError, TypeError):
+            # Fallback to empty array if parsing fails
+            parsed_requirements = []
+        
         # Clean up the file after processing
         try:
             os.remove(pdf_path)
         except:
             pass  # Ignore cleanup errors
         
-        return {"requirements": requirements_json}
+        return {"requirements": parsed_requirements}
             
     except Exception as e:
         # Clean up file in case of error
