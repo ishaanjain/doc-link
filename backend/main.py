@@ -36,7 +36,6 @@ async def extract_requirements_with_anthropic(pdf_path: str) -> str:
         # Read and encode the PDF file as base64
         with open(pdf_path, "rb") as file:
             pdf_data = file.read()
-            import base64
             pdf_base64 = base64.b64encode(pdf_data).decode('utf-8')
         
         # Request requirements extraction with structured output
@@ -79,50 +78,67 @@ Return only the JSON array, no additional text or formatting."""
         print(f"Anthropic API failed: {e}. Falling back to text extraction.")
         return extract_text(pdf_path)
 
-@app.post("/api/convert")
-async def convert_pdfs(left_file: UploadFile = File(...), right_file: UploadFile = File(...)):
-    if not left_file.filename.lower().endswith('.pdf') or not right_file.filename.lower().endswith('.pdf'):
+@app.post("/api/convert-requirements")
+async def convert_to_requirements(file: UploadFile = File(...)):
+    if not file.filename.lower().endswith('.pdf'):
         raise HTTPException(status_code=400, detail="Only PDF files are allowed")
     
     try:
-        # Process left file (requirements extraction with Anthropic)
-        left_content = await left_file.read()
-        left_pdf_path = f"uploads/{left_file.filename}"
-        with open(left_pdf_path, "wb") as buffer:
-            buffer.write(left_content)
+        content = await file.read()
+        pdf_path = f"uploads/{file.filename}"
+        with open(pdf_path, "wb") as buffer:
+            buffer.write(content)
         
         # Extract requirements using Anthropic API
-        left_text = await extract_requirements_with_anthropic(left_pdf_path)
+        requirements_json = await extract_requirements_with_anthropic(pdf_path)
         
-        # Process right file (regular text extraction)
-        right_content = await right_file.read()
-        right_pdf_path = f"uploads/{right_file.filename}"
-        with open(right_pdf_path, "wb") as buffer:
-            buffer.write(right_content)
-        right_text = extract_text(right_pdf_path)
-        
-        # Clean up the files after processing
+        # Clean up the file after processing
         try:
-            os.remove(left_pdf_path)
-            os.remove(right_pdf_path)
+            os.remove(pdf_path)
         except:
             pass  # Ignore cleanup errors
         
-        return {
-            "left_text": left_text,
-            "right_text": right_text
-        }
+        return {"requirements": requirements_json}
             
     except Exception as e:
-        # Clean up files in case of error
+        # Clean up file in case of error
         try:
-            if 'left_pdf_path' in locals():
-                os.remove(left_pdf_path)
-            if 'right_pdf_path' in locals():
-                os.remove(right_pdf_path)
+            if 'pdf_path' in locals():
+                os.remove(pdf_path)
         except:
             pass
-        raise HTTPException(status_code=500, detail=f"Error processing PDFs: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
+
+@app.post("/api/convert-text")
+async def convert_to_text(file: UploadFile = File(...)):
+    if not file.filename.lower().endswith('.pdf'):
+        raise HTTPException(status_code=400, detail="Only PDF files are allowed")
+    
+    try:
+        content = await file.read()
+        pdf_path = f"uploads/{file.filename}"
+        with open(pdf_path, "wb") as buffer:
+            buffer.write(content)
+        
+        # Extract text using pdfminer
+        text = extract_text(pdf_path)
+        
+        # Clean up the file after processing
+        try:
+            os.remove(pdf_path)
+        except:
+            pass  # Ignore cleanup errors
+        
+        return {"text": text}
+            
+    except Exception as e:
+        # Clean up file in case of error
+        try:
+            if 'pdf_path' in locals():
+                os.remove(pdf_path)
+        except:
+            pass
+        raise HTTPException(status_code=500, detail=f"Error processing PDF: {str(e)}")
 
 if __name__ == "__main__":
     import uvicorn

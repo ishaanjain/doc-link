@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PDFViewer from './PDFViewer';
-import { FileText, AlertCircle } from 'lucide-react';
+import { FileText, AlertCircle, Code, Type } from 'lucide-react';
 
 interface PDFComparisonToolProps {
   isDarkMode?: boolean;
@@ -12,7 +12,8 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
   const [leftText, setLeftText] = useState<string | null>(null);
   const [rightText, setRightText] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isConverting, setIsConverting] = useState(false);
+  const [isConvertingLeft, setIsConvertingLeft] = useState(false);
+  const [isConvertingRight, setIsConvertingRight] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => {
     const file = event.target.files?.[0];
@@ -47,37 +48,67 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
     event.preventDefault();
   };
 
-  const convertToText = async () => {
-    if (!leftFile || !rightFile) {
-      setError('Please upload both PDF files first.');
+  const convertLeftToRequirements = async () => {
+    if (!leftFile) {
+      setError('Please upload the left PDF file first.');
       return;
     }
 
-    setIsConverting(true);
+    setIsConvertingLeft(true);
     setError(null);
 
     try {
       const formData = new FormData();
-      formData.append('left_file', leftFile);
-      formData.append('right_file', rightFile);
+      formData.append('file', leftFile);
 
-      const response = await fetch('http://localhost:8000/api/convert', {
+      const response = await fetch('http://localhost:8000/api/convert-requirements', {
         method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error('Failed to convert PDFs');
+        throw new Error('Failed to convert PDF to requirements');
       }
 
       const data = await response.json();
-      setLeftText(data.left_text);
-      setRightText(data.right_text);
+      setLeftText(data.requirements);
     } catch (err) {
-      setError('Failed to convert PDFs. Please try again.');
-      console.error('Error converting PDFs:', err);
+      setError('Failed to convert PDF to requirements. Please try again.');
+      console.error('Error converting PDF to requirements:', err);
     } finally {
-      setIsConverting(false);
+      setIsConvertingLeft(false);
+    }
+  };
+
+  const convertRightToText = async () => {
+    if (!rightFile) {
+      setError('Please upload the right PDF file first.');
+      return;
+    }
+
+    setIsConvertingRight(true);
+    setError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('file', rightFile);
+
+      const response = await fetch('http://localhost:8000/api/convert-text', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to convert PDF to text');
+      }
+
+      const data = await response.json();
+      setRightText(data.text);
+    } catch (err) {
+      setError('Failed to convert PDF to text. Please try again.');
+      console.error('Error converting PDF to text:', err);
+    } finally {
+      setIsConvertingRight(false);
     }
   };
 
@@ -89,17 +120,32 @@ const PDFComparisonTool: React.FC<PDFComparisonToolProps> = ({ isDarkMode = fals
             <FileText className="w-5 h-5 text-blue-500 dark:text-blue-400" />
             <h2 className="text-lg font-medium text-gray-900 dark:text-white">PDF Comparison Tool</h2>
           </div>
-          <button
-            onClick={convertToText}
-            disabled={!leftFile || !rightFile || isConverting}
-            className={`px-4 py-2 rounded-md shadow-sm transition-colors ${
-              !leftFile || !rightFile || isConverting
-                ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
-            }`}
-          >
-            {isConverting ? 'Converting...' : 'Convert to Text'}
-          </button>
+          <div className="flex space-x-3">
+            <button
+              onClick={convertLeftToRequirements}
+              disabled={!leftFile || isConvertingLeft}
+              className={`px-4 py-2 rounded-md shadow-sm transition-colors flex items-center space-x-2 ${
+                !leftFile || isConvertingLeft
+                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                  : 'bg-green-500 hover:bg-green-600 text-white'
+              }`}
+            >
+              <Code className="w-4 h-4" />
+              <span>{isConvertingLeft ? 'Converting...' : 'Extract Requirements'}</span>
+            </button>
+            <button
+              onClick={convertRightToText}
+              disabled={!rightFile || isConvertingRight}
+              className={`px-4 py-2 rounded-md shadow-sm transition-colors flex items-center space-x-2 ${
+                !rightFile || isConvertingRight
+                  ? 'bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-500 cursor-not-allowed'
+                  : 'bg-blue-500 hover:bg-blue-600 text-white'
+              }`}
+            >
+              <Type className="w-4 h-4" />
+              <span>{isConvertingRight ? 'Converting...' : 'Convert to Text'}</span>
+            </button>
+          </div>
         </div>
         {error && (
           <div className="mt-4 p-3 bg-red-50 dark:bg-red-900/50 rounded-md flex items-center space-x-2 text-red-600 dark:text-red-400 animate-fade-in">
